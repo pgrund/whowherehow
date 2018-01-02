@@ -10,29 +10,9 @@ function filterPrivateFields(user) {
   console.log('filtered', u);
   return u;
 }
-/**
-* HAL representation for session
-*/
-function halUser(user) {
-  // filter private fields
-  let {privateId, password, ...filtered } = user;
-  let url = `/users/${user.playerId}`;
-  let hal = {
-    data: filtered,
-    links: {
-        self: url
-    }
-  };
-  if(sess.state == 'OPEN') {
-    hal.links.closing = { href: `${url}/state`}
-  } else {
-    hal.links.turn = { href: `${url}/turn`}
-  }
-  return hal;
-}
 
 router.param('uid', function (req, res, next, id) {
-  let user = storage.allusers.find( u => u.playerId == id);
+  let user = storage.users.all.find( u => u.playerId == id);
   req.user = user;
   if(!req.user) {
     res.status(404).send('no user found for id');
@@ -47,7 +27,15 @@ router.get('/', (req, res) => {
   // Ein Spieler fordert Beschreibungen zu allen am Server angemeldeten Spielern an. Der Server liefert dem Spieler die Beschreibungen.
   // ci -> s  - PlayerListRequestInfo
   // s  -> ci 0 PlayerListInfo
-  res.json(storage.allusers.map(filterPrivateFields));
+  res.hal( {
+    links: {
+      self: '/users',
+      find: { href: "/users/{?id}", templated: true }
+    },
+    embeds: {
+      "users": storage.users.all.map(storage.users.hal)
+    }
+  });
 })
 
 // user info 4.3.1
@@ -55,11 +43,7 @@ router.get('/:uid', (req, res) => {
   // Ein Spieler fordert eine Beschreibung eines anderen Spielers an. Der Server liefert dem Spieler die Beschreibung.
   // ci -> s  - PlayerRequestInfo
   // s  -> ci 0 PlayerInfo
-  if(req.user == req.auth) {
-      res.json(req.user);
-  } else {
-    res.json(filterPrivateFields(req.user));
-  }
+  res.hal(storage.users.hal(req.user));
 })
 //re-login 4.1.2
 router.put('/:uid', (req, res) => {
@@ -74,6 +58,7 @@ router.put('/:uid', (req, res) => {
     res.status(403).send('private ids don\'t match');
     return res;
   }
+  res.cookie('privateId', req.user.privateId, { path: '/api'});
   res.send('re-login for user: ' + req.params.uid);
 });
 // logout 4.1.3
@@ -82,7 +67,8 @@ router.delete('/:uid', (req, res) => {
   // ci -> s        - PlayerRemoveRequestInfo
   // s  -> Cs(ci)   0 PlayerRemovedInfo
   // s  -> C/Cs(ci) 1 PlayerRemovedInfo
-  storage.allusers = storage.allusers.filter(u => u.playerId != req.user.playerId);
+  storage.users.all = storage.users.all.filter(u => u.playerId != req.user.playerId);
+  res.clearCookie('privateId', { path: '/api'});
   res.send('logout for user: ' + req.params.uid);
 })
 // 4.1.4 connection abort

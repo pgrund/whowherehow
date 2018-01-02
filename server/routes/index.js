@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const storage = require('../storage');
 
+const SERVER_PWD = "wlf_aldi_nord";
+
 router.get('/ping', (req, res) => {
   res.send('pong');
 });
@@ -11,7 +13,7 @@ function authenticatedUser (req, res, next) {
     res.status(401).send('no privateId');
     return;
   }
-  req.auth = storage.allusers.find(u => u.privateId == req.cookies.privateId);
+  req.auth = storage.users.all.find(u => u.privateId == req.cookies.privateId);
   if(!req.auth) {
     res.status(401).send('invalid user ');
     return;
@@ -31,15 +33,20 @@ router.post('/users', (req, res) => {
     res.status(400).send('missing name or password');
     return res;
   }
-  if(storage.allusers.find( u => u.name == user.name) != null) {
+  if(storage.users.all.find( u => u.name == user.name) != null) {
     res.status(400).send('player already exists');
     return res;
   }
-  user.playerId = Math.max(...(storage.allusers.map(u => u.playerId).concat(0))) +1;
+  if(!SERVER_PWD == user.password) {
+    res.status(403).send('invalid password for accessing this server');
+    return res;
+  }
+  user.playerId = Math.max(...(storage.users.all.map(u => u.playerId).concat(0))) +1;
   user.privateId = new Date().getTime();
-  let newUser = Object.assign({}, storage.emptyPlayer, user);
-  storage.allusers.push(newUser);
-  res.cookie('privateId', user.privateId);
+  let newUser = Object.assign({}, storage.users.empty, user);
+  delete newUser.password;
+  storage.users.all.push(newUser);
+  res.cookie('privateId', user.privateId, { path: '/api'});
   res.json(newUser);
 });
 

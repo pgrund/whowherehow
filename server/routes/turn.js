@@ -1,7 +1,7 @@
 const router = require('express').Router({mergeParams: true});
 
 router.use(function(req, res, next) {
-  console.log('turn router for session ' + req.params.sid, req.session);
+  console.log('turn router for session ' + req.params.sid, req.session, req.auth);
   next();
 });
 // active turn
