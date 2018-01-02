@@ -4,7 +4,8 @@ import { StoreModule, ActionReducerMap } from '@ngrx/store';
 import { StoreRouterConnectingModule, routerReducer, RouterReducerState,
   RouterStateSerializer} from "@ngrx/router-store";
 
-import * as users from './users/users.reducers'
+// import * as users from './users/users.reducers';
+import * as login from './reducers/login.reducer';
 
 export interface RouterStateUrl {
   url: string;
@@ -14,7 +15,7 @@ export interface RouterStateUrl {
 
 export interface State {
   routerReducer: RouterReducerState<RouterStateUrl>;
-  users: users.State
+  player: login.State
 }
 
 export class CustomSerializer implements RouterStateSerializer<RouterStateUrl> {
@@ -36,80 +37,11 @@ export class CustomSerializer implements RouterStateSerializer<RouterStateUrl> {
 
 export const reducers: ActionReducerMap<State> = {
   routerReducer: routerReducer,
-  users: users.reducer
+  player: login.reducer
 };
 
-/**********************************************************
- * Users Reducers
- *********************************************************/
+export const getPlayer = (state:State) => state.player;
 
-/**
- * Returns the user state.
- * @function getUserState
- * @param {State} state Top level state.
- * @return {State}
- */
-export const getUsersState = (state: State) => state.users;
-
-/**
- * Returns the authenticated user
- * @function getAuthenticatedUser
- * @param {State} state
- * @param {any} props
- * @return {User}
- */
-export const getAuthenticatedUser = createSelector(getUsersState, users.getAuthenticatedUser);
-
-/**
- * Returns the authentication error.
- * @function getAuthenticationError
- * @param {State} state
- * @param {any} props
- * @return {Error}
- */
-export const getAuthenticationError = createSelector(getUsersState, users.getAuthenticationError);
-
-/**
- * Returns true if the user is authenticated
- * @function isAuthenticated
- * @param {State} state
- * @param {any} props
- * @return {boolean}
- */
-export const isAuthenticated = createSelector(getUsersState, users.isAuthenticated);
-
-/**
- * Returns true if the user is authenticated
- * @function isAuthenticated
- * @param {State} state
- * @param {any} props
- * @return {boolean}
- */
-export const isAuthenticatedLoaded = createSelector(getUsersState, users.isAuthenticatedLoaded);
-
-/**
- * Returns true if the authentication request is loading.
- * @function isAuthenticationLoading
- * @param {State} state
- * @param {any} props
- * @return {boolean}
- */
-export const isAuthenticationLoading = createSelector(getUsersState, users.isLoading);
-
-/**
- * Returns the sign out error.
- * @function getSignOutError
- * @param {State} state
- * @param {any} props
- * @return {Error}
- */
-export const getSignOutError = createSelector(getUsersState, users.getSignOutError);
-
-/**
- * Returns the sign up error.
- * @function getSignUpError
- * @param {State} state
- * @param {any} props
- * @return {Error}
- */
-export const getSignUpError = createSelector(getUsersState, users.getSignUpError);
+export const getMyInfo = createSelector(getPlayer, login.getMe);
+export const isAuthenticated = createSelector(getMyInfo, (player) => player != null && player.privateId != null);
+export const getPlayers = createSelector(getPlayer, login.getPlayers);

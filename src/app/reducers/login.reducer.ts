@@ -1,17 +1,20 @@
 import * as LoginActions from '../actions/login';
 // import { Config } from '../model/config';
-// import { URLs } from '../model/config';
+import { Player } from '../model/player';
 
 import { createSelector, createFeatureSelector} from '@ngrx/store';
 
 export type Action = LoginActions.All;
 
-const defaultState = {
-    server: {
-      host: location.protocol + "//" + location.host,
-      validated: false
-    },
-    user: '',
+export interface State {
+  me: Player | null,
+  players: Player[],
+  errors: any[]
+}
+
+const defaultState: State  = {
+    me: null,
+    players: [],
     errors: []
 };
 
@@ -23,16 +26,16 @@ export function reducer (state = defaultState, action: Action ) {
   console.log('login reducer', state, action);
   switch(action.type) {
     case LoginActions.LOGIN_SUCCESS:
-      return newState(state,{ user: action['payload']['user'],
-              server:{ host: action['payload']['server'], validated: true }});
+      let loginSuccess:LoginActions.LoginSuccessAction = action;
+      console.log('reducer:', loginSuccess);
+      return newState(state,{ me : loginSuccess.payload});
     case LoginActions.LOGIN_FAILURE:
       return newState(defaultState, {errors: [...state.errors, 'Login Failed']});
     case LoginActions.SET_SERVER:
-      return newState( state, {server: newState(state.server, { host: action['payload'] })});
     case LoginActions.PING_SUCCESS:
-      return newState( state, {server:newState(state.server, { validated: true })});
     case LoginActions.PING_FAILURE:
-      return newState( state, {server:newState(state.server, { validated: false })});
+      console.log('not used any more ...', action.type)
+      return state;
     // case ConfigActions.UPDATE_URLS:
     //   return newState(state, {urls: action['payload']});
     // case ConfigActions.UPDATE_SPARQL_URL:
@@ -48,6 +51,7 @@ export function reducer (state = defaultState, action: Action ) {
   }
 }
 
-// export const getConfig = createFeatureSelector<Config>('config')
+export const getMe = (state:State) => state.me;
+export const getPlayers = (state:State) => state.players;
 // export const getLoading = createSelector(getConfig, (c:Config) => c.loading);
 // export const getUrls = createSelector(getConfig, (c:Config) => c.urls);

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const storage = require('../storage');
 
-const SERVER_PWD = "wlf_aldi_nord";
+const SERVER_PWD = "wfw_aldi_nord";
 
 router.get('/ping', (req, res) => {
   res.send('pong');
@@ -37,7 +37,7 @@ router.post('/users', (req, res) => {
     res.status(400).send('player already exists');
     return res;
   }
-  if(!SERVER_PWD == user.password) {
+  if(SERVER_PWD != user.password) {
     res.status(403).send('invalid password for accessing this server');
     return res;
   }
@@ -46,7 +46,7 @@ router.post('/users', (req, res) => {
   let newUser = Object.assign({}, storage.users.empty, user);
   delete newUser.password;
   storage.users.all.push(newUser);
-  res.cookie('privateId', user.privateId, { path: '/api'});
+  res.cookie('privateId', user.privateId);
   res.json(newUser);
 });
 

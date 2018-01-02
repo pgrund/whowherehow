@@ -15,15 +15,15 @@ export class LoginComponent implements OnInit {
 
   private subscription: Subscription;
 
-  loginForm:FormGroup = new FormGroup({
-    'user': new FormControl('', [
+  form:FormGroup = new FormGroup({
+    'name': new FormControl('', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(10),
   //    Validators.pattern(/^[a-zA-Z0-9\:_\-\!#\*]*$/)
       ])
    ,
-    'server': new FormControl('', [
+    'password': new FormControl('', [
       Validators.required ,
       //Validators.pattern( /^(?:(http|ws)s?\:\/\/)?\w+(?:\.\w{2,4})*(?:\:\d+)?$/)
     ])
@@ -34,15 +34,15 @@ export class LoginComponent implements OnInit {
 
 //  public server: {host:string, validated: boolean};
 
-  constructor(private store:Store<{config:any}>, private fb:FormBuilder) {
-    this.subscription = this.store.select('config').subscribe( data => {
-      this.id = data.user;
-      console.log(data, this.loginForm);
-      this.loginForm.setValue({
-          user: data.user,
-          server: data.server.host
-      });
-      this.checkedServer = data.server.validated;
+  constructor(private store:Store<{users:any}>, private fb:FormBuilder) {
+    this.subscription = this.store.select('users').subscribe( data => {
+      console.log('data', data, this.form);
+
+        // this.id = data.user;
+        // this.form.setValue({
+        //     user: data.user
+        // });
+
     })
   }
 
@@ -50,12 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log(this.loginForm.value)
-    this.store.dispatch(new LoginRequestAction(this.loginForm.value));
-  }
-
-  pingServer() {
-    console.log(this.loginForm);
-    this.store.dispatch(new PingRequestAction(this.loginForm.controls['server'].value));
+    console.log(this.form.value)
+    this.store.dispatch(new LoginRequestAction(this.form.value));
   }
 }

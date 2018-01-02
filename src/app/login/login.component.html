@@ -1,40 +1,26 @@
-<form [formGroup]="loginForm" class="main" novalidate>
-  <mat-accordion class="center">
-    <mat-expansion-panel [expanded]="false">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Server
-        </mat-panel-title>
-        <mat-panel-description>
-          <mat-icon>devices_other</mat-icon>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-form-field>
-        <span>{{checkedServer}}</span>
-       <input matInput placeholder="Enter your server" formControlName="server" required>
-       <mat-error>
-         Please check server ...
-        </mat-error>
-      </mat-form-field>
-      <mat-action-row>
-        <button mat-button (click)="pingServer()" [disabled]="loginForm.controls.server.invalid">Validate</button>
-      </mat-action-row>
-    </mat-expansion-panel>
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Login
-        </mat-panel-title>
-        <mat-panel-description>
-          <mat-icon>face</mat-icon>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-form-field>
-        <input matInput placeholder="Enter your username" formControlName="user" required>
-      </mat-form-field>
-    </mat-expansion-panel>
-    <div class="center">
-      <button mat-button (click)="login()" color="primary" [disabled]="loginForm.invalid">Login</button>
+<div class="flex-container" fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="center" class="card-container">
+    <div fxFlex="90%" fxFlex.md="50%" fxFlex.lg="40%">
+      <mat-card>
+        <mat-card-title>Sign In</mat-card-title>
+        <mat-card-content>
+          <div *ngIf="error | async" class="error">error {{ error | async }}</div>
+          <form *ngIf="!(loading | async)" (ngSubmit)="login()" [formGroup]="form" novalidate>
+            <div fxLayout="column">
+              <mat-input-container fxFlex="100%">
+                <input matInput required placeholder="User Name" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="name" [class.invalid]="form.controls.name.errors && form.controls.name.dirty">
+              </mat-input-container>
+              <mat-input-container fxFlex="100%">
+                <input matInput required type="password" placeholder="Password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="password" [class.invalid]="form.controls.password.errors && form.controls.password.dirty">
+              </mat-input-container>
+              <button mat-raised-button color="accent" [disabled]="form.invalid" type="submit">Sign In</button>
+            </div>
+          </form>
+          <div fxLayout="row" fxLayoutAlign="center">
+            <mat-spinner *ngIf="loading | async"></mat-spinner>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
-  </mat-accordion>
-</form>
+  </div>
+</div>

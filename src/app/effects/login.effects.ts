@@ -18,11 +18,14 @@ import 'rxjs/add/observable/concat';
 
 import * as LoginActions from '../actions/login';
 
+import { Player } from '../model/player';
+import { Login } from '../model/login';
+
 @Injectable()
 export class LoginEffects {
 
-  private BASE_URL = "";
-  constructor(private actions$: Actions, private http: HttpClient, private store:Store<{config:any}> ) {
+  private BASE_URL = "/api";
+  constructor(private actions$: Actions, private http: HttpClient, private store:Store<{users:any}> ) {
       console.log('init logineffects', store);
     }
 
@@ -30,12 +33,12 @@ export class LoginEffects {
     @Effect()
     loginUser$: Observable<LoginActions.All> = this.actions$.ofType(LoginActions.LOGIN)
       .map((action: LoginActions.LoginRequestAction) => action.payload)
-      .mergeMap((login:{user: string, server: string}) => {
+      .mergeMap((login:Login) => {
         console.log('user login', login);
-        this.BASE_URL = login.server + "/api";
-        return this.http.post(`${this.BASE_URL}/users`, login.user)
-          .catch( err => Observable.of(new LoginActions.LoginFailureAction(login)))
-          .map( data => new LoginActions.LoginSuccessAction(login));
+        return this.http.post<Player>(`${this.BASE_URL}/users`, login)
+          .map( (data:Player) => new LoginActions.LoginSuccessAction(data))
+          .catch( err => Observable.of(new LoginActions.LoginFailureAction()))
+
       });
 
     @Effect()

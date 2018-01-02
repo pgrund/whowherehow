@@ -1,4 +1,6 @@
 import { Action } from '@ngrx/store';
+import { Player } from '../model/player';
+import { Login } from '../model/login';
 
 export const LOGIN         =  '[Login] login user'
 export const LOGIN_SUCCESS =  '[Login] user logged in'
@@ -10,15 +12,14 @@ export const SET_SERVER    =  '[Login] set server'
 
 export class LoginRequestAction implements Action {
   readonly type = LOGIN;
-  constructor(public payload:{user: string, server: string}) {};
+  constructor(public payload:Login) {};
 }
 export class LoginSuccessAction implements Action {
   readonly type = LOGIN_SUCCESS;
-  constructor(public payload:{user: string, server: string}) {};
+  constructor(public payload:Player) {};
 }
 export class LoginFailureAction implements Action {
   readonly type = LOGIN_FAILURE;
-  constructor(public payload:{user: string, server: string}) {};
 }
 export class PingRequestAction implements Action {
   readonly type = PING;

@@ -14,11 +14,11 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 
 import { AppRoutingModule } from './app-routing.module';
-import { UsersModule } from './users/users.module';
+// import { UsersModule } from './users/users.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 // effects
-import { UserEffects } from "./users/users.effects";
+import { LoginEffects } from "./effects/login.effects";
 import { RouterEffects } from "./shared/router.effects";
 
 // guards
@@ -28,22 +28,19 @@ import { AuthenticationGuard} from "./shared/authentication.guard";
 import {reducers} from "./app.reducers";
 
 // services
-import { UserService } from './services/user.service';
+// import { UserService } from './services/user.service';
+import { ChatService } from './services/chat.service';
+import { WebSocketService } from './services/web-socket.service';
 
-
-//import { LoginEffects } from './effects/login.effects';
-// import { LoginComponent } from './login/login.component';
 import { AppComponent } from './app.component';
-
-import { environment } from '../environments/environment';
 import { NotFoundComponent } from './not-found/not-found.component';
 
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundComponent,
-    // LoginComponent
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +50,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     CommonModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    UsersModule,
+    // UsersModule,
     StoreRouterConnectingModule,
     StoreModule.forRoot(reducers),
     // StoreModule.forRoot({
@@ -64,11 +61,14 @@ import { NotFoundComponent } from './not-found/not-found.component';
     }),
     EffectsModule.forRoot([
       RouterEffects,
-      UserEffects
+      LoginEffects
     ]),
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
   ],
-  providers: [UserService, AuthenticationGuard],
+  providers: [
+    WebSocketService,
+    ChatService,
+    AuthenticationGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
