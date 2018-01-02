@@ -1,0 +1,35 @@
+<div class="flex-container" fxLayout="column">
+  <button (click)="home()" fxFlexAlign="center" class="logo-container">
+    <div class="logo"></div>
+  </button>
+  <div fxLayout="row" fxLayoutAlign="center" class="card-container">
+    <div fxFlex="90%" fxFlex.md="50%" fxFlex.lg="40%">
+      <mat-card>
+        <mat-card-title>Sign Up</mat-card-title>
+        <mat-card-content>
+          <div *ngIf="error | async" color="error">{{ error | async }}</div>
+          <form *ngIf="!(loading | async)" (ngSubmit)="submit()" [formGroup]="signupForm" novalidate>
+            <div fxLayout="column">
+              <mat-form-field>
+                <input matInput required placeholder="First Name" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="firstName">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput required placeholder="Last Name" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="lastName">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput required placeholder="Email Address" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="email">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput required type="password" placeholder="Password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="password">
+              </mat-form-field>
+              <button mat-raised-button [disabled]="signupForm.invalid" type="submit" color="accent">Sign Up</button>
+            </div>
+          </form>
+          <div fxLayout="row" fxLayoutAlign="center">
+            <mat-spinner *ngIf="loading | async"></mat-spinner>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

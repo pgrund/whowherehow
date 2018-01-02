@@ -1,0 +1,40 @@
+<form [formGroup]="loginForm" class="main" novalidate>
+  <mat-accordion class="center">
+    <mat-expansion-panel [expanded]="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Server
+        </mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>devices_other</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <span>{{checkedServer}}</span>
+       <input matInput placeholder="Enter your server" formControlName="server" required>
+       <mat-error>
+         Please check server ...
+        </mat-error>
+      </mat-form-field>
+      <mat-action-row>
+        <button mat-button (click)="pingServer()" [disabled]="loginForm.controls.server.invalid">Validate</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Login
+        </mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>face</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <input matInput placeholder="Enter your username" formControlName="user" required>
+      </mat-form-field>
+    </mat-expansion-panel>
+    <div class="center">
+      <button mat-button (click)="login()" color="primary" [disabled]="loginForm.invalid">Login</button>
+    </div>
+  </mat-accordion>
+</form>
