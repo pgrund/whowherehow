@@ -39,20 +39,18 @@ import { Login } from '@app/model/login';
 @Injectable()
 export class LoginEffects {
 
-  constructor(private actions$: Actions, private http: HttpClient, private store:Store<State> ) {
-      console.log('init logineffects', store);
-    }
+  constructor(private actions$: Actions, private store:Store<State>,
+    private http: HttpClient) {}
 
 
     @Effect()
     loginUser$: Observable<LoginActions | RouterActions> = this.actions$.ofType(LOGIN)
       .map((action: LoginRequestAction) => action.payload)
       .mergeMap((login:Login) => {
-        console.log('user login', login);
         return this.http.post<Player>('/api/players', login)
           .flatMap( (data:Player) => [
               new LoginSuccessAction(data),
-              new Go({ path: login.returnUrl.split('/').filter(s => s.trim().length > 0)})
+              new Go({ path: (login.returnUrl ? login.returnUrl : 'info/' + data._links.self.href).split('/').filter(s => s.trim().length > 0)})
           ])
           .catch( err => Observable.of(new LoginFailureAction(err)))
 
@@ -62,7 +60,6 @@ export class LoginEffects {
     logoutUser$: Observable<LoginActions | RouterActions> = this.actions$.ofType(LOGOUT)
       .map((action: LogoutRequestAction) => action.payload)
       .mergeMap((user:Player) => {
-        console.log('user logout', '/api' + user._links.self.href);
         return this.http.delete('/api' + user._links.self.href, { responseType: 'text'})
           .flatMap(() => [
             new LogoutSuccessAction(),
@@ -75,7 +72,6 @@ export class LoginEffects {
     reLoginUser$: Observable<LoginActions> = this.actions$.ofType(RE_LOGIN)
       .map((action: ReLoginRequestAction) => action.payload)
       .mergeMap((user:Player) => {
-        console.log('re-login', user);
         return this.http.put<Player>('/api' + user._links.self.href, { privateId: user.privateId })
           .map( (data:Player) => new LoginSuccessAction(data))
           .catch( err => Observable.of(new LoginFailureAction(err)))

@@ -15,7 +15,6 @@ export class PlayersGuard implements CanActivate {
   constructor(private store:Store<State>) {}
 
   canActivate(): Observable<boolean> {
-    console.log('check players guard')
     return this.checkStore().pipe(
       switchMap(() => of(true)),
       catchError(() => of(false))
@@ -30,7 +29,7 @@ export class PlayersGuard implements CanActivate {
             this.store.dispatch(new LoadAllAction());
           }
         }),
-        filter(loaded => {console.log('loaded', loaded);return loaded}),
+        filter(loaded => loaded),
         take(1)
       );
   }

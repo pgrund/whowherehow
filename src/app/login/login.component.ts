@@ -9,8 +9,9 @@ import { LoginRequestAction, ReLoginRequestAction } from '@app/actions/login.act
 import { Go } from '@app/actions/router.actions';
 import { getMyInfo, State } from '@app/reducers';
 
-
 import { Player } from '@app/model/player';
+
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'cluedo-login',
@@ -22,32 +23,33 @@ export class LoginComponent implements OnInit, OnDestroy {
   public me:Player;
 
   private subscription:Subscription;
-  private returnUrl = '/';
 
   public form:FormGroup = new FormGroup({
-    'name': new FormControl('', [
+    'name': new FormControl( this.me ? this.me.name : '', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(10),
   //    Validators.pattern(/^[a-zA-Z0-9\:_\-\!#\*]*$/)
-      ])
-   ,
+    ]),
     'password': new FormControl('', [
       Validators.required ,
       //Validators.pattern( /^(?:(http|ws)s?\:\/\/)?\w+(?:\.\w{2,4})*(?:\:\d+)?$/)
-    ])
+    ]),
+    'returnUrl': new FormControl('')
   });
 
 
   constructor(private store:Store<State>, private fb:FormBuilder,
     private router: Router, private route: ActivatedRoute) {
-    this.subscription = this.store.select(getMyInfo).subscribe( (myself:Player) => {
-      this.me = myself;
+    this.subscription = this.store.select(getMyInfo).subscribe((myself:Player) => {
+      if(myself) {
+        this.me = myself;
+        this.form.patchValue({ name: myself.name });
+      }
     });
     this.route.queryParams.subscribe(params => {
-      console.log('login params',params);
-      this.returnUrl = params['returnUrl'] || '/';
-    })
+      if(params['returnUrl']) this.form.patchValue( { returnUrl: params['returnUrl'] });
+    });
   }
 
   ngOnInit() {}
@@ -60,7 +62,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ReLoginRequestAction(this.me));
   }
   login() {
-    this.store.dispatch(new LoginRequestAction( { ...this.form.value, returnUrl: this.returnUrl }));
+    let loginUser = this.form.value;
+    this.store.dispatch(new LoginRequestAction(this.form.value));
   }
   test() {
     this.store.dispatch( new Go({ path:['info', 'players']}))

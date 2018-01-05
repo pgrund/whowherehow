@@ -28,8 +28,8 @@ import {
 
 
 import { AppRoutingModule } from './app-routing.module';
-// import { UsersModule } from './users/users.module';
-import { ServiceWorkerModule } from '@angular/service-worker';
+
+//import { ServiceWorkerModule } from '@angular/service-worker';
 
 // effects
 import { RouterEffects } from "@app/effects/router.effects";
@@ -83,7 +83,7 @@ import { environment } from '../environments/environment';
       PlayerEffects,
       SessionsEffects,
     ]),
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+    //ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FlexLayoutModule,
     FormsModule,
     MatButtonModule,

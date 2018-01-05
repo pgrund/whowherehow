@@ -11,6 +11,8 @@ import { LoadAllAction as LoadAllSessions } from '@app/actions/sessions.actions'
 
 import { Player } from '@app/model/player';
 
+import { environment } from '@env/environment';
+
 @Component({
   selector: 'cluedo-nav',
   templateUrl: './nav.component.html',
@@ -21,7 +23,11 @@ export class NavComponent implements OnInit {
   @Input() me: Player = null;
 
   public returnUrl = '/';
-  constructor(private store:Store<State>) {}
+  public debug: boolean;
+
+  constructor(private store:Store<State>) {
+    this.debug = !environment.production;
+  }
 
   ngOnInit() {}
 

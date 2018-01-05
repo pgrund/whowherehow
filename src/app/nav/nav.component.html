@@ -55,7 +55,7 @@
       <span>Logout</span>
     </button>
   </mat-card-content>
-  <mat-card-actions>
+  <mat-card-actions *ngIf="debug">
     <button mat-button (click)="test()">test</button> <input [value]="returnUrl" (change)="returnUrl = $event.target.value"/>
     <button mat-button (click)="loadAll()">all</button>
     <button mat-button (click)="loadPlayers()">players</button>
