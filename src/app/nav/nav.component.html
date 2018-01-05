@@ -1,0 +1,64 @@
+<mat-card>
+  <mat-card-title>
+    CluedoNG
+  </mat-card-title>
+  <mat-card-content *ngIf="me">
+    <button mat-icon mat-raised-button color="primary" [matMenuTriggerFor]="rootMenu">
+      <mat-icon>more_vert</mat-icon>
+      <span>Open Menu</span>
+    </button>
+    <mat-menu #rootMenu="matMenu">
+      <button mat-menu-item [routerLink]="'/info/' + me._links.self.href">
+        <mat-icon>settings</mat-icon>
+        <span>About Me</span>
+      </button>
+      <button mat-menu-item [matMenuTriggerFor]="sessionMenu">
+        <mat-icon>settings</mat-icon>
+        <span>Session Managment</span>
+      </button>
+      <button mat-menu-item [matMenuTriggerFor]="playerMenu">
+        <mat-icon>voicemail</mat-icon>
+        <span>Player Management</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>notifications_off</mat-icon>
+        <span>Chat</span>
+      </button>
+      <button mat-menu-item [matMenuTriggerFor]="turnMenu" *ngIf="me._links.game">
+        <mat-icon>notifications_on</mat-icon>
+        <span>My Game</span>
+      </button>
+    </mat-menu>
+
+    <mat-menu #sessionMenu="matMenu">
+      <button mat-menu-item routerLink="/info/sessions">list</button>
+      <button mat-menu-item [routerLink]="['info', 'sessions', '1']">detail</button>
+    </mat-menu>
+
+    <mat-menu #playerMenu="matMenu">
+      <button mat-menu-item routerLink="/info/players">list</button>
+      <button mat-menu-item [routerLink]="['info', 'players', '2']">detail</button>
+    </mat-menu>
+
+    <mat-menu #turnMenu="matMenu">
+      <button mat-menu-item>Shut down</button>
+      <button mat-menu-item>Restart</button>
+      <button mat-menu-item *ngIf="me._links.admin">Administrate Game</button>
+    </mat-menu>
+
+    <button *ngIf="!me" mat-icon mat-raised-button routerLink="/login">
+      <mat-icon>get_app</mat-icon>
+      <span>Login</span>
+    </button>
+    <button *ngIf="me.privateId" mat-icon mat-raised-button (click)="logout()">
+      <mat-icon>exit_app</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button (click)="test()">test</button> <input [value]="returnUrl" (change)="returnUrl = $event.target.value"/>
+    <button mat-button (click)="loadAll()">all</button>
+    <button mat-button (click)="loadPlayers()">players</button>
+    <button mat-button (click)="loadSessions()">sessions</button>
+  </mat-card-actions>
+</mat-card>

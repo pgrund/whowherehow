@@ -1,7 +1,16 @@
+import { PersonCard } from './card';
+import { Hal } from './hal';
+
 type PlayerState = 'PLAYER' | 'DIRECTOR';
-export interface Player {
+export type Position = {
+  x: number,
+  y: number
+}
+export interface Player extends Hal {
   name: string,
-  playerId: number,
-  state: PlayerState,
-  privateId?: number
+  privateId?: number,
+  teamId?: PersonCard,
+  position?: Position,
+  currentDice?: number,
+  numberOfCards?: number
 }

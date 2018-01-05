@@ -1,0 +1,7 @@
+<p>
+  player-detail works for {{playerId}}!
+</p>
+<pre>{{ player$ | async | json }}</pre>
+<div *ngIf="(me$ | async) as me ">
+  <pre>{{ me | json }}</pre>
+</div>

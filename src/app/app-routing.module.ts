@@ -3,30 +3,55 @@ import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-// @angular/flex-layout
-import { FlexLayoutModule } from "@angular/flex-layout";
+// angular material
+import { MatIconModule, MatChipsModule, MatInputModule, MatTableModule } from "@angular/material";
 
-// @angular/material
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatIconModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatMenuModule
-} from "@angular/material";
+// guards
+import * as fromGuards from '@app/guards';
 
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from '@app/login/login.component';
+
+import { InfoModule } from '@app/info/info.module';
+import { PlayerListComponent } from '@app/info/player-list/player-list.component';
+import { PlayerDetailComponent } from '@app/info/player-detail/player-detail.component';
+import { SessionListComponent } from '@app/info/session-list/session-list.component';
+import { SessionDetailComponent } from '@app/info/session-detail/session-detail.component';
 
 const routes: Routes = [
   {
-    path: "login",
+    path: 'login',
     component: LoginComponent
   },
-  // {
-  //   path: 'users',
-  //   loadChildren: 'app/users/users.module#UsersModule'
-  // },
+  {
+    path: 'info',
+    children: [
+      {
+        path: "players",
+        component: PlayerListComponent,
+        canActivate: [ fromGuards.PlayersGuard ]
+      },
+      {
+        path: "players/:uid",
+        component: PlayerDetailComponent,
+        canActivate: [ fromGuards.PlayersGuard ]
+      },
+      {
+        path: "sessions",
+        component: SessionListComponent,
+      },
+      {
+        path: "sessions/:sid",
+        component: SessionDetailComponent
+      }
+    ],
+    canActivateChild: [ fromGuards.AuthGuard ],
+    canActivate: [ fromGuards.AuthGuard ]
+  },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
   {
     path: '**',
     redirectTo: 'login',
@@ -37,18 +62,15 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
+    RouterModule.forRoot(routes),
+    InfoModule,
+    MatTableModule,
     MatIconModule,
     MatInputModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    ReactiveFormsModule,
-    RouterModule.forRoot(routes)
+    MatChipsModule,
   ],
-  declarations: [LoginComponent],
+  providers: [...fromGuards.guards],
+  declarations: [],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

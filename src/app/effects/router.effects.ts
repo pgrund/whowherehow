@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Effect, Actions } from '@ngrx/effects';
-import * as RouterActions from './router.actions';
+import * as RouterActions from '@app/actions/router.actions';
 
 @Injectable()
 export class RouterEffects {

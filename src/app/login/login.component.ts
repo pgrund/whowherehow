@@ -1,21 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-
-import {Subscription} from 'rxjs';
-
-import { Store } from '@ngrx/store';
-import { LoginRequestAction, PingRequestAction } from '../actions/login';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+import { LoginRequestAction, ReLoginRequestAction } from '@app/actions/login.actions';
+import { Go } from '@app/actions/router.actions';
+import { getMyInfo, State } from '@app/reducers';
+
+
+import { Player } from '@app/model/player';
 
 @Component({
   selector: 'cluedo-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription;
+  public me:Player;
 
-  form:FormGroup = new FormGroup({
+  private subscription:Subscription;
+  private returnUrl = '/';
+
+  public form:FormGroup = new FormGroup({
     'name': new FormControl('', [
       Validators.required,
       Validators.minLength(3),
@@ -29,28 +38,32 @@ export class LoginComponent implements OnInit {
     ])
   });
 
-  public id:string = "";
-  public checkedServer:boolean;
 
-//  public server: {host:string, validated: boolean};
-
-  constructor(private store:Store<{users:any}>, private fb:FormBuilder) {
-    this.subscription = this.store.select('users').subscribe( data => {
-      console.log('data', data, this.form);
-
-        // this.id = data.user;
-        // this.form.setValue({
-        //     user: data.user
-        // });
-
+  constructor(private store:Store<State>, private fb:FormBuilder,
+    private router: Router, private route: ActivatedRoute) {
+    this.subscription = this.store.select(getMyInfo).subscribe( (myself:Player) => {
+      this.me = myself;
+    });
+    this.route.queryParams.subscribe(params => {
+      console.log('login params',params);
+      this.returnUrl = params['returnUrl'] || '/';
     })
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
-  login() {
-    console.log(this.form.value)
-    this.store.dispatch(new LoginRequestAction(this.form.value));
+  reLogin() {
+    this.store.dispatch(new ReLoginRequestAction(this.me));
   }
+  login() {
+    this.store.dispatch(new LoginRequestAction( { ...this.form.value, returnUrl: this.returnUrl }));
+  }
+  test() {
+    this.store.dispatch( new Go({ path:['info', 'players']}))
+  }
+
 }

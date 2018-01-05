@@ -18,9 +18,14 @@
           </form>
           <div fxLayout="row" fxLayoutAlign="center">
             <mat-spinner *ngIf="loading | async"></mat-spinner>
+            <button mat-button *ngIf="me" (click)="reLogin()">re-login</button>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
 </div>
+<pre>{{ me | json }}</pre>
+<h1>{{ returnUrl }}<h1>
+<button (click)="test()">test</button>
+<a routerLink="/login" [queryParams]="{returnUrl: '/info/sessions'}">test1</a>

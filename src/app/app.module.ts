@@ -12,20 +12,33 @@ import { StoreRouterConnectingModule, routerReducer, RouterReducerState,
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
+// @angular/flex-layout
+import { FlexLayoutModule } from "@angular/flex-layout";
+
+// @angular/material
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatIconModule,
+  MatInputModule,
+  MatProgressSpinnerModule,
+  MatMenuModule,
+  MatTableModule
+} from "@angular/material";
+
 
 import { AppRoutingModule } from './app-routing.module';
 // import { UsersModule } from './users/users.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 // effects
-import { LoginEffects } from "./effects/login.effects";
-import { RouterEffects } from "./shared/router.effects";
-
-// guards
-import { AuthenticationGuard} from "./shared/authentication.guard";
+import { RouterEffects } from "@app/effects/router.effects";
+import { LoginEffects } from "@app/effects/login.effects";
+import { PlayerEffects } from "@app/effects/player.effects";
+import { SessionsEffects } from "@app/effects/sessions.effects";
 
 // reducers
-import {reducers} from "./app.reducers";
+import {reducers} from "@app/reducers";
 
 // services
 // import { UserService } from './services/user.service';
@@ -34,13 +47,18 @@ import { WebSocketService } from './services/web-socket.service';
 
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { NavComponent } from './nav/nav.component';
+import { LoginComponent } from './login/login.component';
 
 import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    LoginComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,
@@ -61,14 +79,26 @@ import { environment } from '../environments/environment';
     }),
     EffectsModule.forRoot([
       RouterEffects,
-      LoginEffects
+      LoginEffects,
+      PlayerEffects,
+      SessionsEffects,
     ]),
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+    FlexLayoutModule,
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatTableModule,
+    ReactiveFormsModule,
   ],
   providers: [
     WebSocketService,
     ChatService,
-    AuthenticationGuard],
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
