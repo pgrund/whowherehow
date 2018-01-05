@@ -37,7 +37,7 @@ const EMPTY_SESSION =  {
   hal: function halUser(user) {
     // filter private fields
     let {privateId, playerId, state, ...filtered } = user;
-    let url = `/users/${user.playerId}`;
+    let url = `/players/${user.playerId}`;
     let session = sessions.all.find(s => s.teamMates.includes(user.playerId));
     let hal = {
       data: filtered,
@@ -86,8 +86,8 @@ const sessions = {
         data: filtered,
         links: {
             self: { href: url },
-            director: { href: `/users/${sess.directorId}` },
-            players: { href: `${url}/users`},
+            director: { href: `/players/${sess.directorId}` },
+            players: { href: `${url}/players`},
         }
       };
       if(sess.state == 'OPEN') {

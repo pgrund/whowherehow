@@ -85,12 +85,12 @@ router.put('/:sid/state', directorOfSession, (req, res) => {
   res.status(200).hal(storage.sessions.hal(updatedSession));
 })
 
-router.get('/:sid/users/', (req, res) => {
+router.get('/:sid/players/', (req, res) => {
   let users = storage.users.all.filter(u => req.session.teamMates.indexOf(u.playerId)>-1);
   return res.json(users);
 })
 // join 4.2.4 - +ASYNC
-router.post('/:sid/users/', (req, res) => {
+router.post('/:sid/players/', (req, res) => {
   // Der Spieler möchte an einer bestimmten Session teilnehmen. Der Server leitet die An- frage des Spielers an den Spielleiter der Session weiter. Dieser teilt dem Server mit, ob er den Spieler akzeptiert oder nicht. Der Server gibt die Rückmeldung des Spielleiters an den anfragenden Spieler und die Spieler der Session weiter.
   // ci -> s            - SessionJoinRequestInfo
   // s  -> cd           0 SessionJoinRequestInfo
@@ -103,7 +103,7 @@ router.post('/:sid/users/', (req, res) => {
   res.hal(storage.sessions.hal(updatedSession));
 })
 // 4.2.5 invite user - +ASYNC
-router.put('/:sid/users/:tid', directorOfSession, (req,res) => {
+router.put('/:sid/players/:tid', directorOfSession, (req,res) => {
   // Der Spielleiter lädt einen anderen Spieler zu seiner Session ein.
   // cd  -> s          - PlayerNotifyInfo
   // s   -> ciUCs(cd)  0 PlayerNotifyInfo
@@ -112,7 +112,7 @@ router.put('/:sid/users/:tid', directorOfSession, (req,res) => {
 });
 
 // 4.2.6 kickout user - +ASYNC
-router.delete('/:sid/users/:tid', directorOfSession, (req, res) => {
+router.delete('/:sid/players/:tid', directorOfSession, (req, res) => {
   // Der Spielleiter schließt einen Spieler aus einer Session aus. Der Ausschluß kann zu einem beliebigen Zeitpunkt erfolgen.
   // cd  -> s          - PlayerNotifyInfo
   // s   -> ciUCs(cd)  0 PlayerNotifyInfo
@@ -147,7 +147,7 @@ router.get('/', (req, res) => {
 // game
 // preparation
 // spread cards 4.4.1 - ASYNC
-router.get('/:sid/users/:tid/cards', (req, res) => {
+router.get('/:sid/players/:tid/cards', (req, res) => {
   // Nachdem eine Session durch den Spielleiter geschlossen wurde, verteilt der Server die Spielkarten an die teilnehmenden Spieler, d.h. jeder Spieler erhält eine bestimmte Anzahl an Karten.
   // s  -> Cs 0 CardListInfo
   res.send('cards for single user: ' + req.params.uid + ' of session: ' + req.params.sid);
