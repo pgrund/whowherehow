@@ -1,8 +1,4 @@
-<mat-card>
-  <mat-card-title>
-    CluedoNG
-  </mat-card-title>
-  <mat-card-content *ngIf="me">
+  <ng-container *ngIf="me">
     <button mat-icon mat-raised-button color="primary" [matMenuTriggerFor]="rootMenu">
       <mat-icon>more_vert</mat-icon>
       <span>Open Menu</span>
@@ -54,11 +50,10 @@
       <mat-icon>exit_app</mat-icon>
       <span>Logout</span>
     </button>
-  </mat-card-content>
-  <mat-card-actions *ngIf="debug">
+  </ng-container>
+  <ng-container *ngIf="debug">
     <button mat-button (click)="test()">test</button> <input [value]="returnUrl" (change)="returnUrl = $event.target.value"/>
     <button mat-button (click)="loadAll()">all</button>
     <button mat-button (click)="loadPlayers()">players</button>
     <button mat-button (click)="loadSessions()">sessions</button>
-  </mat-card-actions>
-</mat-card>
+  </ng-container>

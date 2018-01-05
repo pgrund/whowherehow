@@ -2,11 +2,10 @@ import "rxjs/add/observable/of";
 import "rxjs/add/observable/throw";
 import { EffectsRunner, EffectsTestingModule } from "@ngrx/effects/testing";
 import { fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { ErrorEffects } from "../effects/error.effects";
-import { ErrorService } from "../services/error.service";
+import { NotificationEffects } from "../effects/notification.effects";
 import { Observable } from "rxjs/Observable";
 
-describe('ErrorEffects', () => {
+describe('NotificationEffects', () => {
   let runner, errorEffects, errorService;
 
   beforeEach(() => TestBed.configureTestingModule({
@@ -14,18 +13,13 @@ describe('ErrorEffects', () => {
       EffectsTestingModule
     ],
     providers: [
-      ErrorEffects,
-      {
-        provide: ErrorService,
-        useValue: jasmine.createSpyObj('errorService', ['get'])
-      }
+      NotificationEffects,
     ]
   }));
 
   beforeEach(() => {
     runner = TestBed.get(EffectsRunner);
-    errorEffects = TestBed.get(ErrorEffects);
-    errorService = TestBed.get(ErrorService);
+    errorEffects = TestBed.get(NotificationEffects);
   });
 
   describe('error$', () => {

@@ -1,7 +1,7 @@
-import { reducer } from '../reducers/error.reducer';
-import * as fromError from '../reducers/error.reducer';
+import { reducer } from '../reducers/notification.reducer';
+import * as fromError from '../reducers/notification.reducer';
 
-describe('ErrorReducer', () => {
+describe('NotificationReducer', () => {
 
   describe('undefined action', () => {
     it('should return the default state', () => {

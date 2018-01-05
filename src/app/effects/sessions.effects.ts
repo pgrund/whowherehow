@@ -22,7 +22,7 @@ export class SessionsEffects {
       .ofType(sessions.LOAD_ALL)
       .switchMap(payload => this.http.get('/api/sessions')
         // If successful, dispatch success action with result
-        .map((data:any) => new sessions.LoadAllSuccessAction(data._embedded.sessions))
+        .map((data:any) => new sessions.LoadAllSuccessAction(<Session[]>data._embedded.sessions))
         // If request fails, dispatch failed action
         .catch((err) => Observable.of(new sessions.LoadFailAction(err)))
       );

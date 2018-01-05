@@ -1,17 +1,34 @@
 import * as login from '@app/actions/login.actions';
-import * as error from '@app/actions/error.actions';
 
 import { Player } from '@app/model/player';
+
+import { environment } from '@env/environment';
 
 export interface State {
   authToken: number;
   me: Player;
 }
 
-export const initialState: State = {
-  authToken: -1,
+export const initialState: State =  environment.production ? {
+  authToken: -1 ,
   me: null
-}
+} :
+{
+  authToken: 1,
+  me :{
+    teamId: null,
+     position: { x: 0, y: 0 },
+     currentDice: 0,
+     numberOfCards: 0,
+     name: 'spieler1',
+     privateId: 1 ,
+     _links: {
+       self: {href: '/players/1'},
+       admin: {href: '/sessions/1'},
+       game: {href: '/sessions/1'},
+     }
+  }
+};
 
 export function reducer(state = initialState, action: login.Actions): State {
   console.debug('LOGIN', action);

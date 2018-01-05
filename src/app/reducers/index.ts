@@ -5,14 +5,14 @@ import * as session from './sessions.reducer';
 import * as player from './player.reducer';
 import * as login from './login.reducer';
 import * as router from './router.reducer';
-import * as error from './error.reducer';
+import * as notify from './notification.reducer';
 
 export interface State {
   routerReducer: RouterReducerState<router.RouterStateUrl>
   player: player.State
   auth: login.State
   session: session.State
-  errors: Error[]
+  messages: notify.State
 }
 
 export const reducers: ActionReducerMap<State> = {
@@ -20,10 +20,13 @@ export const reducers: ActionReducerMap<State> = {
   auth: login.reducer,
   player: player.reducer,
   session: session.reducer,
-  errors: error.reducer
+  messages: notify.reducer
 };
 
-export const getErrors  = (state:State) => state.errors;
+export const getMessages    = (state:State) => state.messages;
+export const getErrors      = createSelector(getMessages, notify.getErrors);
+export const getLastError   = createSelector(getErrors, errors => errors.length > 0 ? errors[0] : null);
+export const getInfos       = createSelector(getMessages, notify.getInfos);
 
 export const getAuth    = (state:State) => state.auth;
 export const getMyInfo = createSelector(getAuth, login.getMyInfo);
@@ -35,3 +38,4 @@ export const getPlayersLoaded = createSelector(getPlayer, (player) => player.loa
 
 export const getSession = (state: State) => state.session;
 export const getSessions = createSelector(getSession, session.getSessions);
+export const getSessionsLoaded = createSelector(getSession, (session) => session.loaded);

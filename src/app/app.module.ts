@@ -23,7 +23,10 @@ import {
   MatInputModule,
   MatProgressSpinnerModule,
   MatMenuModule,
-  MatTableModule
+  MatTableModule,
+  MatExpansionModule,
+  MatListModule,
+  MatSnackBarModule,
 } from "@angular/material";
 
 
@@ -36,12 +39,12 @@ import { RouterEffects } from "@app/effects/router.effects";
 import { LoginEffects } from "@app/effects/login.effects";
 import { PlayerEffects } from "@app/effects/player.effects";
 import { SessionsEffects } from "@app/effects/sessions.effects";
+import { NotificationEffects } from "@app/effects/notification.effects";
 
 // reducers
 import {reducers} from "@app/reducers";
 
 // services
-// import { UserService } from './services/user.service';
 import { ChatService } from './services/chat.service';
 import { WebSocketService } from './services/web-socket.service';
 
@@ -51,6 +54,7 @@ import { NavComponent } from './nav/nav.component';
 import { LoginComponent } from './login/login.component';
 
 import { environment } from '../environments/environment';
+import { ErrorComponent } from './error/error.component';
 
 
 @NgModule({
@@ -58,7 +62,11 @@ import { environment } from '../environments/environment';
     AppComponent,
     NotFoundComponent,
     LoginComponent,
-    NavComponent
+    NavComponent,
+    ErrorComponent,
+  ],
+  entryComponents: [
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -68,12 +76,8 @@ import { environment } from '../environments/environment';
     CommonModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    // UsersModule,
     StoreRouterConnectingModule,
     StoreModule.forRoot(reducers),
-    // StoreModule.forRoot({
-    //   config: loginReducer
-    // }),
     StoreDevtoolsModule.instrument({
       maxAge: 10 //number of states to retain
     }),
@@ -82,6 +86,7 @@ import { environment } from '../environments/environment';
       LoginEffects,
       PlayerEffects,
       SessionsEffects,
+      NotificationEffects,
     ]),
     //ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FlexLayoutModule,
@@ -93,6 +98,9 @@ import { environment } from '../environments/environment';
     MatProgressSpinnerModule,
     MatMenuModule,
     MatTableModule,
+    MatExpansionModule,
+    MatListModule,
+    MatSnackBarModule,
     ReactiveFormsModule,
   ],
   providers: [

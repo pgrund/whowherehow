@@ -1,6 +1,3 @@
-<p>
-  player-list works!
-</p>
 <div class="example-container mat-elevation-z8">
   <div class="example-header">
     <mat-form-field>
@@ -9,26 +6,13 @@
   </div>
 
   <mat-table #table [dataSource]="dataSource">
-
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
-    </ng-container>
-
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.name}}<mat-icon *ngIf="element._links.admin">supervisor_account</mat-icon></mat-cell>
     </ng-container>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="weight">
-      <mat-header-cell *matHeaderCellDef> Weight </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.weight}} </mat-cell>
-    </ng-container>
-
-    <!-- Symbol Column -->
+    <!-- Links Column -->
     <ng-container matColumnDef="_links">
       <mat-header-cell *matHeaderCellDef> Hyperlinks </mat-header-cell>
       <mat-cell *matCellDef="let element">

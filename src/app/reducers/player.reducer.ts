@@ -3,11 +3,9 @@ import * as PlayerActions from '@app/actions/player.actions';
 import { Player } from '@app/model/player';
 
 export interface State {
-  // me: Player | null,
   players: Player[],
   loaded: boolean,
   loading: boolean
-  // errors: any[]
 }
 
 
@@ -16,32 +14,9 @@ const newState = (state, newData) => {
 }
 
 export const initialState: State = {
-  // me: {
-  //   "_links": {
-  //     "self": {
-  //       "href": "/players/1"
-  //     },
-  //     "game": {
-  //       "href": "/sessions/1"
-  //     },
-  //     "admin": {
-  //       "href": "/sessions/1"
-  //     }
-  //   },
-  //   "teamId": null,
-  //   "position": {
-  //     "x": 0,
-  //     "y": 0
-  //   },
-  //   "privateId" : 1,
-  //   "currentDice": 0,
-  //   "numberOfCards": 0,
-  //   "name": "spieler1"
-  // },
   players: [],
   loaded: false,
   loading: false,
-  // errors: []
 }
 
 export function reducer(state = initialState, action: PlayerActions.Actions): State {

@@ -38,10 +38,12 @@ const routes: Routes = [
       {
         path: "sessions",
         component: SessionListComponent,
+        canActivate: [ fromGuards.SessionsGuard ]
       },
       {
         path: "sessions/:sid",
-        component: SessionDetailComponent
+        component: SessionDetailComponent,
+        canActivate: [ fromGuards.SessionsGuard ]
       }
     ],
     canActivateChild: [ fromGuards.AuthGuard ],
