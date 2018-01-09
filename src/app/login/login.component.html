@@ -11,7 +11,7 @@
                 <input matInput required placeholder="User Name" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="name" [class.invalid]="form.controls.name.errors && form.controls.name.dirty">
               </mat-input-container>
               <mat-input-container fxFlex="100%">
-                <input matInput required type="password" placeholder="Password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="password" [class.invalid]="form.controls.password.errors && form.controls.password.dirty">
+                <input matInput required type="password" placeholder="Server Password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="password" [class.invalid]="form.controls.password.errors && form.controls.password.dirty">
               </mat-input-container>
               <button mat-raised-button color="accent" [disabled]="form.invalid" type="submit">Sign In</button>
             </div>
