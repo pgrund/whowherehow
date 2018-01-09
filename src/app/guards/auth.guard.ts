@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import {
   Route, Router,
   ActivatedRouteSnapshot, RouterStateSnapshot,
-  CanActivate,// CanActivateChild, CanLoad,
+  CanActivate, CanActivateChild, CanLoad,
 } from '@angular/router';
 
 // import rxjs
@@ -22,7 +22,7 @@ import { Player } from '@app/model/player'
  * @class AuthenticatedGuard
  */
 @Injectable()
-export class AuthGuard implements CanActivate { //, CanActivateChild {
+export class AuthGuard implements CanActivate{ //}, CanActivateChild, CanLoad {
 
   /**
    * @constructor
@@ -30,25 +30,25 @@ export class AuthGuard implements CanActivate { //, CanActivateChild {
   constructor(private store: Store<State>, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    console.debug('auth checks for ' + state.url);
-    return this.checkStore(state).pipe(
+    return this.checkStore(state.url).pipe(
       switchMap(() => {console.debug('auth allows ' + state.url);return of(true)}),
       catchError(() => {console.debug('auth denies ' + state.url);return of(false)})
     )
   }
 
-  checkStore(state: RouterStateSnapshot): Observable<boolean> {
+  checkStore(url: string = ''): Observable<boolean> {
     return this.store.select(isAuthenticated)
       .pipe(
         tap(authenticated => {
+          console.log(isAuthenticated && document.cookie.indexOf('privateId')>-1);
           if(!authenticated) {
             let go = new RouterActions.Go({
               path:['login'],
               query: {
-                returnUrl: state.url
+                returnUrl: url
               }
             });
-            console.debug('auth redirects', state.url, go);
+            console.debug('auth redirects', url);
             this.store.dispatch(go);
           }
         }),
@@ -57,8 +57,11 @@ export class AuthGuard implements CanActivate { //, CanActivateChild {
   }
 
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-    return this.checkStore(state);
+    return this.checkStore(state.url);
   }
 
-
+  canLoad(route: Route): Observable<boolean> | boolean {
+    console.log('auth checks for loading')
+    return this.checkStore();
+  }
 }
