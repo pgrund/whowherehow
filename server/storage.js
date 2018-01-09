@@ -46,10 +46,10 @@ const EMPTY_SESSION =  {
       }
     };
     if(session) {
-      hal.links.game =  { href: `/sessions/${session.sessionId}` }
+      hal.links.game =  { href: `/sessions/${session.sessionId}`, name: session.sessionName }
     }
     if(user.state == 'DIRECTOR') {
-      hal.links.admin = { href: `/sessions/${session.sessionId}` }
+      hal.links.admin = { href: `/sessions/${session.sessionId}`, name: sessions.sessionName }
     }
 
     return hal;
@@ -80,20 +80,28 @@ const sessions = {
     */
     hal: function halSession(sess) {
       // filter private fields
-      let {activePlayerIndex, directorId, sessionId, teamMates, ...filtered } = sess;
+      let {activePlayerIndex, directorId, sessionId, state, teamMates, ...filtered } = sess;
       let url = `/sessions/${sess.sessionId}`;
+      let admin = users.all.find(p => p.playerId === sess.directorId);
       let hal = {
         data: filtered,
         links: {
             self: { href: url },
-            director: { href: `/players/${sess.directorId}` },
-            players: { href: `${url}/players`},
+            admin: {
+              href: `/players/${admin.playerId}`,
+              name : admin.name
+            },
+            players: users.all.filter(p => sess.teamMates.indexOf(p.playerId) > -1).map(p => ({
+              href : `/players/${p.playerId}`,
+              name : p.name
+            }))
         }
       };
       if(sess.state == 'OPEN') {
-        hal.links.closing = { href: `${url}/state`}
+        hal.links.start = { href: `${url}/state`, title: 'get session started'};
+        hal.links.join = { href: `${url}/players`, title: 'join session'};
       } else {
-        hal.links.turn = { href: `${url}/turn`}
+        hal.links.turn = { href: `${url}/turn`, title: 'current turn of session'};
       }
       return hal;
     },

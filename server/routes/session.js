@@ -56,10 +56,13 @@ router.post('/', (req, res) => {
   s.sessionId = Math.max(...(storage.sessions.all.map(s => s.sessionId))) +1;
   s.directorId = req.auth.playerId;
   s.teamMates = [s.directorId];
+
   let newSession = Object.assign({}, storage.sessions.empty, s);
   storage.sessions.all.push(newSession);
-  res.hal(halSession(newSession));
-  res.status(201).location(`./${newSession.sessionId}`).end();
+  let updatedSession = storage.sessions.hal(newSession);
+
+  res.status(201).location(updatedSession.links.self.href)
+    .hal(updatedSession);
 })
 // logout 4.2.2 - +ASYNC
 router.delete('/:sid', directorOfSession, (req, res) => {
@@ -97,9 +100,9 @@ router.post('/:sid/players/', (req, res) => {
   // #forward to invite
   // cd -> s            - PlayerNotifyInfo
   // s  -> ci U Cs(cd)  0 PlayerNotifyInfo
-  let updatedSession = storage.sessions.update({teamMates : [...req.session.teamMates, req.auth.playerId]}, req.session);
+  let updatedSession = storage.sessions.update({teamMates : [...new Set(req.session.teamMates.concat(req.auth.playerId))]}, req.session);
   let updatedUser = storage.users.update(storage.users.joined, req.auth);
-  console.log(updatedUser);
+  //console.log(updatedUser);
   res.hal(storage.sessions.hal(updatedSession));
 })
 // 4.2.5 invite user - +ASYNC
@@ -117,7 +120,12 @@ router.delete('/:sid/players/:tid', directorOfSession, (req, res) => {
   // cd  -> s          - PlayerNotifyInfo
   // s   -> ciUCs(cd)  0 PlayerNotifyInfo
   updatedSession = storage.sessions.update({teamMates: req.session.teamMates.filter( u => u != req.user.playerId)}, req.session);
-  req.user.teamId = null;
+  let updatedUser = Object.assign({}, req.user);
+  Object.keys(storage.users.joined).forEach( key => {
+    console.log(key, delete updatedUser['key']);
+  });
+  storage.users.update(updatedUser, {});
+
   res.hal(storage.sessions.hal(updatedSession));
 })
 
@@ -137,7 +145,9 @@ router.get('/', (req, res) => {
   res.hal( {
     links: {
       self: '/sessions',
-      find: { href: "/sessions/{?id}", templated: true }
+      find: { href: "/sessions/{?id}", templated: true },
+      start: { href: "/sessions/{?id}/state", templated: true },
+      turn: { href: "/sessions/{?id}/turn", templated: true }
     },
     embeds: {
       "sessions": storage.sessions.all.map(storage.sessions.hal)
