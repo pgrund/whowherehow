@@ -3,3 +3,11 @@
 /* @import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
 /* @import "~@angular/material/prebuilt-themes/pink-bluegrey.css"; */
 /* @import "~@angular/material/prebuilt-themes/purple-green.css"; */
+
+.mat-chip[ng-reflect-router-link]:not([disabled]):hover ,
+.mat-chip.mat-chip-selected:not([disabled]):hover {
+  cursor: pointer;
+}
+.mat-chip[disabled] {
+  opacity: 0.3;
+}
