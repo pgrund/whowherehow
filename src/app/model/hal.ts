@@ -1,11 +1,18 @@
 export type HalLink = {
   href: string,
-  templated?: boolean
+  templated?: boolean,
+  title?: string,
+  name?: string
 }
-export interface Hal {
-  _links: {
-    self: HalLink,
-    admin?: HalLink,
-    game?: HalLink
-  }
+export interface HalLinks {
+  self: HalLink,
+  players?: HalLink[],
+  admin?: HalLink,
+  game?: HalLink,
+  start?: HalLink,
+  join?: HalLink,
+  turn?: HalLink
+}
+export class Hal {
+  _links: HalLinks
 }
