@@ -20,7 +20,10 @@ export function reducer(state = initialState, action: sessions.Actions): State {
   console.debug('SESSION', action);
   switch (action.type) {
 
-    case sessions.LOAD_ALL: {
+    case sessions.LOAD_ALL:
+    case sessions.KICK_OUT:
+    case sessions.JOIN:
+    case sessions.CREATE_SESSION: {
       return {
         ...state,
         loaded: false,
@@ -33,6 +36,32 @@ export function reducer(state = initialState, action: sessions.Actions): State {
         loaded: true,
         loading: false,
         current: null
+      };
+    }
+    case sessions.JOIN_SUCCESS: {
+      let updated: Session = (<sessions.JoinSuccessAction>action).payload;
+      return {
+        ...state,
+        sessions: state.sessions.filter(s => s.sessionName != updated.sessionName).concat(updated),
+        loaded: true,
+        loading: false,
+      };
+    }
+    case sessions.KICK_OUT_SUCCESS: {
+      let updated: Session = (<sessions.KickOutSuccessAction>action).payload;
+      return {
+        ...state,
+        sessions: state.sessions.filter(s => s.sessionName != updated.sessionName).concat(updated),
+        loaded: true,
+        loading: false,
+      };
+    }
+    case sessions.CREATE_SESSION_SUCCESS: {
+      return {
+        ...state,
+        sessions: [...state.sessions, (<sessions.CreateSessionSuccessAction>action).payload],
+        loaded: true,
+        loading: false,
       };
     }
 
