@@ -6,11 +6,10 @@
   </div>
 
   <mat-table #table [dataSource]="dataSource">
-
     <!-- Name Column -->
-    <ng-container matColumnDef="sessionName">
+    <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.sessionName}}<mat-icon *ngIf="element._links.admin">supervisor_account</mat-icon></mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.name}}<mat-icon *ngIf="element._links.admin">supervisor_account</mat-icon></mat-cell>
     </ng-container>
 
     <!-- Links Column -->
@@ -20,7 +19,7 @@
         <mat-chip-list>
           <mat-chip *ngFor="let key of objectKeys(element._links)"
               [color]="key == 'game' ?  'primary': (key == 'self' && element.name == me) ? 'accent' : 'default'" selected="true"
-              [routerLink]="'/info/' + element._links[key].href"> {{key}} </mat-chip>
+              [routerLink]="element._links[key].href"> {{key}} </mat-chip>
         </mat-chip-list>
        </mat-cell>
     </ng-container>

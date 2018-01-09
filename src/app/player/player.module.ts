@@ -2,20 +2,38 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { PlayerListComponent } from './player-list/player-list.component';
 import { PlayerDetailComponent } from './player-detail/player-detail.component';
-import { SessionDetailComponent } from './session-detail/session-detail.component';
-import { SessionListComponent } from './session-list/session-list.component';
 
 import { MatIconModule, MatChipsModule, MatInputModule, MatTableModule } from "@angular/material";
+
+// guards
+import * as fromGuards from '@app/guards';
+
+const routes: Routes = [
+  {
+    path: '',
+      redirectTo: 'overview',
+      pathMatch: 'prefix'
+  },
+  {
+    path: 'overview',
+      component: PlayerListComponent,
+  },
+  {
+    path: ':uid',
+    component: PlayerDetailComponent,
+  }
+];
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule,
+    RouterModule.forChild(routes),
     ReactiveFormsModule,
     MatTableModule,
     MatIconModule,
@@ -25,14 +43,8 @@ import { MatIconModule, MatChipsModule, MatInputModule, MatTableModule } from "@
   declarations: [
     PlayerListComponent,
     PlayerDetailComponent,
-    SessionDetailComponent,
-    SessionListComponent,
   ],
-  exports: [
-    PlayerListComponent,
-    PlayerDetailComponent,
-    SessionDetailComponent,
-    SessionListComponent,
-  ]
+  providers: [...fromGuards.guards],
+  exports: []
 })
-export class InfoModule { }
+export class PlayerModule { }

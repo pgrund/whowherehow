@@ -1,0 +1,7 @@
+<mat-chip-list>
+  <!-- HATEOAS -->
+  <mat-chip *ngIf="links.start" (click)="joinSession(links.self.href)" [disabled]="isPlayerOfGame()" selected="!isPlayerOfGame()" color="accent" title="join session">join</mat-chip>
+  <mat-chip *ngIf="links.start" [disabled]="!isDirectorOfGame()" [selected]="isDirectorOfGame()" (click)="closeSession(links.start.href)" color="accent" [title]="links.start.title">close</mat-chip>
+
+  <mat-chip *ngIf="links.turn" [disabled]="!isPlayerOfGame()" [selected]="isPlayerOfGame()" [routerLink]="links.turn.href" color="accent" [title]="links.turn.title">current round</mat-chip>
+</mat-chip-list>

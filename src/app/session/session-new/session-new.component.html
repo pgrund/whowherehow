@@ -1,0 +1,12 @@
+<div>
+  <mat-form-field>
+    <input matInput placeholder="new session name" [formControl]="name" required>
+    <mat-error *ngIf="name.invalid && name.errors.minlength">
+      name requires minimum of {{name.errors.minlength.requiredLength }} characters
+    </mat-error>
+    <mat-error *ngIf="name.invalid && name.errors.maxlength">
+      name requires maximum of {{name.errors.maxlength.requiredLength }} characters
+    </mat-error>
+  </mat-form-field>
+  <button mat-raised-button color="accent" [disabled]="name.invalid" (click)="create()">Create</button>
+</div>

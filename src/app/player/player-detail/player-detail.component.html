@@ -3,5 +3,6 @@
 </p>
 <pre>{{ player$ | async | json }}</pre>
 <div *ngIf="(me$ | async) as me ">
+  <p>That's me:</p>
   <pre>{{ me | json }}</pre>
 </div>
