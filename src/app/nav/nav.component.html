@@ -4,36 +4,26 @@
       <span>Open Menu</span>
     </button>
     <mat-menu #rootMenu="matMenu">
-      <button mat-menu-item [routerLink]="'/info/' + me._links.self.href">
-        <mat-icon>settings</mat-icon>
+      <button mat-menu-item [routerLink]="me._links.self.href">
+        <mat-icon>account_circle</mat-icon>
         <span>About Me</span>
       </button>
-      <button mat-menu-item [matMenuTriggerFor]="sessionMenu">
-        <mat-icon>settings</mat-icon>
-        <span>Session Managment</span>
+      <button mat-menu-item routerLink="/sessions">
+        <mat-icon>videogame_asset</mat-icon>
+        <span>Games</span>
       </button>
-      <button mat-menu-item [matMenuTriggerFor]="playerMenu">
-        <mat-icon>voicemail</mat-icon>
-        <span>Player Management</span>
+      <button mat-menu-item routerLink="/players">
+        <mat-icon>recent_actors</mat-icon>
+        <span>Players</span>
       </button>
       <button mat-menu-item>
-        <mat-icon>notifications_off</mat-icon>
+        <mat-icon>chat</mat-icon>
         <span>Chat</span>
       </button>
       <button mat-menu-item [matMenuTriggerFor]="turnMenu" *ngIf="me._links.game">
-        <mat-icon>notifications_on</mat-icon>
+        <mat-icon>play_arrow</mat-icon>
         <span>My Game</span>
       </button>
-    </mat-menu>
-
-    <mat-menu #sessionMenu="matMenu">
-      <button mat-menu-item routerLink="/info/sessions">list</button>
-      <button mat-menu-item [routerLink]="['info', 'sessions', '1']">detail</button>
-    </mat-menu>
-
-    <mat-menu #playerMenu="matMenu">
-      <button mat-menu-item routerLink="/info/players">list</button>
-      <button mat-menu-item [routerLink]="['info', 'players', '2']">detail</button>
     </mat-menu>
 
     <mat-menu #turnMenu="matMenu">
@@ -51,9 +41,9 @@
       <span>Logout</span>
     </button>
   </ng-container>
-  <ng-container *ngIf="debug">
+  <!-- <ng-container *ngIf="debug">
     <button mat-button (click)="test()">test</button> <input [value]="returnUrl" (change)="returnUrl = $event.target.value"/>
     <button mat-button (click)="loadAll()">all</button>
     <button mat-button (click)="loadPlayers()">players</button>
     <button mat-button (click)="loadSessions()">sessions</button>
-  </ng-container>
+  </ng-container> -->
