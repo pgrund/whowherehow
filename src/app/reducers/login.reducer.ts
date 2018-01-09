@@ -6,7 +6,7 @@ import { environment } from '@env/environment';
 
 export interface State {
   authToken: number;
-  me: Player;
+  me: Player | null;
 }
 
 export const initialState: State =  environment.production ? {
@@ -33,6 +33,9 @@ export const initialState: State =  environment.production ? {
 export function reducer(state = initialState, action: login.Actions): State {
   console.debug('LOGIN', action);
   switch (action.type) {
+    case login.RE_LOGIN:
+      document.cookie = "privateId=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      return state;
     case login.LOGIN_SUCCESS:
       return {
         ...state,
@@ -40,6 +43,7 @@ export function reducer(state = initialState, action: login.Actions): State {
         authToken: (<login.LoginSuccessAction>action).payload.privateId
       };
     case login.LOGOUT_SUCCESS:
+      document.cookie = "privateId=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       return {
         ...state,
         me : null,
