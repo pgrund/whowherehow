@@ -45,7 +45,6 @@ import { NotificationEffects } from "@app/effects/notification.effects";
 import {reducers} from "@app/reducers";
 
 // services
-import { ChatService } from './services/chat.service';
 import { WebSocketService } from './services/web-socket.service';
 
 import { AppComponent } from './app.component';
@@ -55,6 +54,8 @@ import { LoginComponent } from './login/login.component';
 
 import { environment } from '../environments/environment';
 import { ErrorComponent } from './error/error.component';
+import { ChatInfoComponent } from './chat/chat-info.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 @NgModule({
@@ -64,9 +65,12 @@ import { ErrorComponent } from './error/error.component';
     LoginComponent,
     NavComponent,
     ErrorComponent,
+    ChatInfoComponent,
+    ChatComponent,
   ],
   entryComponents: [
-    ErrorComponent
+    ErrorComponent,
+    ChatInfoComponent
   ],
   imports: [
     BrowserModule,
@@ -105,7 +109,6 @@ import { ErrorComponent } from './error/error.component';
   ],
   providers: [
     WebSocketService,
-    ChatService,
     ],
   bootstrap: [AppComponent]
 })

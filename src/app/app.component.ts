@@ -1,13 +1,15 @@
 import { Component, OnDestroy, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getMyInfo, getLastError } from '@app/reducers';
+import { State, getMyInfo, getLastError, getLastChatMessage } from '@app/reducers';
 
 import { Subscription } from 'rxjs';
 
 import { MatSnackBar } from '@angular/material';
 import { ErrorComponent } from '@app/error/error.component';
+import { ChatInfoComponent } from '@app/chat/chat-info.component';
 
 import { Player } from '@app/model/player';
+import { Chat } from '@app/model/chat';
 
 import { AckErrorAction } from '@app/actions/notification.actions';
 
@@ -22,6 +24,7 @@ export class AppComponent implements OnDestroy {
 
   private subscriptionMe: Subscription;
   private subscriptionError: Subscription;
+  private subscriptionChat: Subscription;
 
   constructor(private store:Store<State>, public snackBar: MatSnackBar) {
     this.subscriptionMe = this.store.select(getMyInfo).subscribe( me => {
@@ -35,6 +38,12 @@ export class AppComponent implements OnDestroy {
           console.log('dismissed, auto ack ... ', error);
           this.store.dispatch(new AckErrorAction(0));
         });
+      }
+    });
+    this.subscriptionChat = this.store.select(getLastChatMessage).subscribe( (msg:Chat) => {
+      if(msg) {
+        let snackBarRef = this.snackBar.openFromComponent(ChatInfoComponent, { data: msg, panelClass: "chat-info" });
+        snackBarRef.instance.snackbar = snackBarRef;
       }
     });
   }

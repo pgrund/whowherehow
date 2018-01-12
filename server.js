@@ -8,6 +8,8 @@ const cookieParser = require('cookie-parser');
 const hal = require("express-hal");
 const WebSocket = require('ws');
 
+const storage = require('./server/storage');
+
 
 const app = express();
 
@@ -24,10 +26,21 @@ const wss = new WebSocket.Server({
    path: '/api',
    clientTracking: true,
    verifyClient: (info, done) => {
-    // console.log('verify', info.req.headers)
     cookieParser()( // req, res, next
       info.req, {}, () => {
-          done(info.req.cookies.privateId);
+        // cookie required for auth
+          if(info.req.cookies.privateId) {
+            // check user exists ...
+            let user = storage.users.all.find(u => u.privateId == info.req.cookies.privateId);
+          if(user) {
+              info.req.user = user;
+              done(true);
+            } else {
+              done(false, 403, 'invalid user, not authorized')
+            }
+          } else {
+            done(false, 401, 'user not authenticated')
+          }
         });
   }
  });
@@ -37,34 +50,103 @@ const wss = new WebSocket.Server({
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Broadcast to all.
-wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
+wss.broadcast = function broadcast(data, clients) {
+  console.log('broadcasting  ...', data);
+  clients.forEach( (client) => {
+    if ((!ws || client !== ws) && client.readyState === WebSocket.OPEN) {
+      console.log('sending to %s: %s', client.privateId, data);
       client.send(data);
+    } else {
+      console.warn(client.player.name + ' cannot be send to ... ');
     }
   });
 };
 
+function heartbeat () {
+  this.isAlive = true;
+  console.log('pong from %s', this.privateId);
+}
+
+const interval = setInterval(function ping() {
+  wss.clients.forEach(function each(ws) {
+    console.log('ping client %s', ws.privateId);
+    if (ws.isAlive === false) return ws.terminate();
+
+    ws.isAlive = false;
+    ws.ping(() => {});
+  });
+}, 30000);
+
 wss.on('connection', function connection(ws, req) {
+  ws.player = req.user;
+  ws.isAlive = true;
+  console.log('player %s connected', ws.player.name);
+
+  // let intID = setInterval(function () {
+  //   console.log('send ping to %s', playerId);
+  //   ws.ping(JSON.stringify({clients:wss.clients, time: new Date()}));
+  // }, 5000);
+
   ws.on('open', function() {
      console.log('open for connection ...')
    })
   ws.on('message', function (data) {
-    console.log('received from %s: %s', req.cookies.privateId, data);
-    wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(data);
+    console.log('received from %s: %s', ws.player.name, data);
+    let updatedMsg = {};
+    try {
+       updatedMsg = JSON.parse(data);
+    } catch(err){
+      console.error(err);
+      updatedMsg = { type : 'ERROR', data: err };
+    }
+    if(updatedMsg.type == 'CHAT') {
+      // setting player name and date
+      updatedMsg.data.sender = ws.player.name;
+      updatedMsg.data.time = new Date();
+
+      if(updatedMsg.receiverId) {
+        console.log('point to point communication');
+        let client = wss.clients.find(c => c.player.playerId == updatedMsg.receiverId);
+        if(client) {
+          client.send(JSON.stringify(updatedMsg));
+        } else {
+          console.error('no client found for ', updatedMsg.receiverId);
+        }
+      } else {
+        // all players of session
+        let clients = storage.sessions.all.find(s => s.teamMates.includes(ws.player.playerId))
+            .teamMates
+            .map(pId => wss.clients.find(c => c.player.playerId == pId));
+        wss.broadcast(JSON.stringify(updatedMsg), clients);
       }
-    });
+
+    } else {
+      console.warn('unknown type', updatedMsg, data);
+    }
+
+
+
+
+    // if(data.indexOf('stop')>-1){
+    //   console.log('stop for %s', playerId);
+    //   clearInterval(intID);
+    // }
+    // if(data.indexOf('start')>-1) {
+    //   console.log('start for %s', playerId);
+    //   intID = setInterval(function () {
+    //     console.log('send ping to %s', playerId);
+    //     ws.send(JSON.stringify({clients:wss.clients, time: new Date()}));
+    //   }, 5000);
+    // }
   });
   ws.on('close', function () {
-    console.log('closing connection');
+    console.log('closing connection for %s', ws.player.name);
   });
   ws.on('error', function (err) {
-    console.log('error', err);
+    console.log('error for ' + ws.player.name, err);
   });
 
-  setTimeout(() => {ws.send(JSON.stringify(wss.clients));}, 5000);
+
 });
 
 // Set our api routes

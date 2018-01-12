@@ -18,11 +18,16 @@ import { PlayerDetailComponent } from '@app/player/player-detail/player-detail.c
 import { SessionListComponent } from '@app/session/session-list/session-list.component';
 import { SessionDetailComponent } from '@app/session/session-detail/session-detail.component';
 import { SessionNewComponent } from './session/session-new/session-new.component';
+import { ChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'chat',
+    component: ChatComponent
   },
   {
     path: 'players',

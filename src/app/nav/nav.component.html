@@ -16,7 +16,7 @@
         <mat-icon>recent_actors</mat-icon>
         <span>Players</span>
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item routerLink="/chat">
         <mat-icon>chat</mat-icon>
         <span>Chat</span>
       </button>
@@ -32,7 +32,7 @@
       <button mat-menu-item *ngIf="me._links.admin">Administrate Game</button>
     </mat-menu>
 
-    <button *ngIf="!me" mat-icon mat-raised-button routerLink="/login">
+    <button *ngIf="!me || true" mat-icon mat-raised-button routerLink="/login">
       <mat-icon>get_app</mat-icon>
       <span>Login</span>
     </button>

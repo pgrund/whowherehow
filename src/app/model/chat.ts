@@ -1,8 +1,17 @@
 import { Player } from './player';
 import { Session } from './session';
 
-export interface Chat {
-  sender: Player,
-  receiver: Player | Session,
-  message: string
+export class Chat {
+  sender?: string ;
+  receiverId?: number;
+  time?: Date;
+  message: string;
+
+  constructor(msg:string, owner:string, receiver: number = null) {
+    this.sender = owner;
+    this.message = msg;
+    if(receiver) {
+      this.receiverId = receiver;
+    }
+  }
 }
