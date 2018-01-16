@@ -52,6 +52,11 @@ router.delete('/:uid', (req, res) => {
   // ci -> s        - PlayerRemoveRequestInfo
   // s  -> Cs(ci)   0 PlayerRemovedInfo
   // s  -> C/Cs(ci) 1 PlayerRemovedInfo
+  req.wss.sendToAllPlayers({
+    type:"NOTIFY", data:{
+      action:'[Notification] Player Dropped Out',
+      payload: req.user.name
+    }});
   storage.users.all = storage.users.all.filter(u => u.playerId != req.user.playerId);
   res.clearCookie('privateId', { path: '/api'});
   res.send('logout for player: ' + req.params.uid);
@@ -63,11 +68,17 @@ router.delete('/:uid', (req, res) => {
 
 
 // chat
-// single message 4.6.1
+// single message 4.6.1 - ASYNC
 router.post('/:uid/messages', (req, res) => {
   // Ein Spieler möchte eine Textnachricht an einen anderen Spieler senden.
   //  ci  -> s  - ChatRequestInfo
   //  s   -> cj 0 ChatInfo
-  res.send('user message for player: ' + req.user.name);
+  req.wss.sendToPlayer({
+    type:"CHAT",
+    data:{
+      message: JSON.parse(req.body),
+      sender: req.auth.name
+    }}, req.user.playerId);
+  res.send(`message send to player '%s' via websocket`, req.user.name);
 })
-module.exports = router;
+module.exports = router

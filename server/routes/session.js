@@ -12,7 +12,7 @@ function directorOfSession (req, res, next) {
     return;
   }
   if(req.session.directorId != req.auth.playerId) {
-    res.status(403).send('diretor role for session needed');
+    res.status(403).send('director role for session needed');
     return;
   }
   next();
@@ -36,6 +36,23 @@ router.param('tid', function (req, res, next, id) {
   next();
 });
 
+// sessions info 4.3.4
+router.get('/', (req, res) => {
+  //Ein Spieler fordert eine Beschreibung zu allen beim Server angemeldeten Sessions an. Der Server liefert dem Spieler die Beschreibungen.
+  // ci  -> s   - SessionListRequestInfo
+  // s   -> ci  0 SessionListInfo
+  res.hal( {
+    links: {
+      self: '/sessions',
+      find: { href: "/sessions/{?id}", templated: true },
+      start: { href: "/sessions/{?id}/state", templated: true },
+      turn: { href: "/sessions/{?id}/turn", templated: true }
+    },
+    embeds: {
+      "sessions": storage.sessions.all.map(storage.sessions.hal)
+    }
+  });
+})
 // session management
 // login 4.2.1  - +ASYNC
 router.post('/', (req, res) => {
@@ -64,19 +81,35 @@ router.post('/', (req, res) => {
   res.status(201).location(updatedSession.links.self.href)
     .hal(updatedSession);
 })
+
+// session info 4.3.3
+router.get('/:sid', (req, res) => {
+  //Ein Spieler fordert eine Beschreibung einer Session an. Der Server liefert dem Spieler die Beschreibung.
+  // ci  -> s   - SessionRequestInfo
+  // s   -> ci  0 SessionInfo
+  res.hal(storage.sessions.hal(req.session));
+})
 // logout 4.2.2 - +ASYNC
 router.delete('/:sid', directorOfSession, (req, res) => {
   // Der Spielleiter meldet eine Session ab. Der Server teilt dieses allen angemeldeten Spieler mit.
   // ci -> s            - SessionRemoveRequestInfo
   // s  -> Cs(ci)UCu    0 SesionRemovedInfo
   // s  -> C/(CsciUCu)  1 SessionRemovedInfo
-
-  storage.sessions.all = storage.sessions.all.filter(s => s.sessionId != req.session.sessionId)
+  req.wss.sendToSessionOfPlayer({
+    type: 'NOTIFY',
+    data: {
+      action: '[Notification] Session Dropped Out',
+      payload: s.sessionName
+    }},req.user.name);
+  storage.sessions.all = storage.sessions.all.filter(s => s.sessionId != req.session.sessionId);
   res.send(`terminated session: ${req.session.sessionName}(${req.session.sessionId}) `);
 })
+
 // close 4.2.3 - +ASYNC
 router.put('/:sid/state', directorOfSession, (req, res) => {
-  //Der Spielleiter schließt eine Session, d.h. es werden keine weiteren Mitspieler aufgenom- men. Der Server teilt dieses allen angemeldeten Spieler mit. (Anmerkung: Im Anschluß startet der Spieler das Spiel innerhalb dieser Session, siehe Abschnitt 4.4.)
+  //Der Spielleiter schließt eine Session, d.h. es werden keine weiteren Mitspieler aufgenommen.
+  //Der Server teilt dieses allen angemeldeten Spieler mit.
+  //(Anmerkung: Im Anschluß startet der Spieler das Spiel innerhalb dieser Session, siehe Abschnitt 4.4.)
   // cd -> s            - SessionCloseRequestInfo
   // s  -> Cs(cd)UCu    0 SessionClosedInfo
   // s  -> C/Cs(cd)UCu  1 SessionClosedInfo
@@ -84,8 +117,19 @@ router.put('/:sid/state', directorOfSession, (req, res) => {
     res.status(400).send('invalid status');
     return res;
   }
+  if(req.session.teamMates.length < 3) {
+    res.status(400).send('not enough players');
+    return res;
+  }
   let updatedSession = storage.sessions.update({state : 'CLOSED'}, req.session);
-  res.status(200).hal(storage.sessions.hal(updatedSession));
+  let hal = storage.sessions.hal(updatedSession);
+  req.wss.sendToAllPlayers({
+    type:'NOTIFY',
+    data:{
+      action:'[Notification] Session closed',
+      playload: hal
+    }});
+  res.status(200).hal(hal);
 })
 
 router.get('/:sid/players/', (req, res) => {
@@ -102,7 +146,12 @@ router.post('/:sid/players/', (req, res) => {
   // s  -> ci U Cs(cd)  0 PlayerNotifyInfo
   let updatedSession = storage.sessions.update({teamMates : [...new Set(req.session.teamMates.concat(req.auth.playerId))]}, req.session);
   let updatedUser = storage.users.update(storage.users.joined, req.auth);
-  //console.log(updatedUser);
+  req.wss.sendToSessionOfPlayer({
+    type:"NOTIFY",
+    data:{
+      action:'[Notification] Player added',
+      player:updatedUser.playerId
+    }}, updatedUser.playerId);
   res.hal(storage.sessions.hal(updatedSession));
 })
 // 4.2.5 invite user - +ASYNC
@@ -111,6 +160,12 @@ router.put('/:sid/players/:tid', directorOfSession, (req,res) => {
   // cd  -> s          - PlayerNotifyInfo
   // s   -> ciUCs(cd)  0 PlayerNotifyInfo
   let updatedSession = storage.sessions.update({teamMates: [...req.session.teamMates, req.user.playerId]}, req.session);
+  req.wss.sendToSessionOfPlayer({
+    type: 'NOTIFY',
+    data: {
+      action: '[Notification] Player Invited',
+      payload: req.user.name
+    }}, req.auth.name);
   res.hal(storage.sessions.hal(updatedSession));
 });
 
@@ -125,43 +180,27 @@ router.delete('/:sid/players/:tid', directorOfSession, (req, res) => {
     console.log(key, delete updatedUser['key']);
   });
   storage.users.update(updatedUser, {});
-
+  req.wss.sendToSessionOfPlayer({
+    type:"NOTIFY",
+    data:{
+      action:'[Notification] Player Dropped Out Of Session',
+      player:updatedUser.playerId
+    }}, updatedUser.playerId);
   res.hal(storage.sessions.hal(updatedSession));
 })
 
 
-// session info 4.3.3
-router.get('/:sid', (req, res) => {
-  //Ein Spieler fordert eine Beschreibung einer Session an. Der Server liefert dem Spieler die Beschreibung.
-  // ci  -> s   - SessionRequestInfo
-  // s   -> ci  0 SessionInfo
-  res.hal(storage.sessions.hal(req.session));
-})
-// sessions info 4.3.4
-router.get('/', (req, res) => {
-  //Ein Spieler fordert eine Beschreibung zu allen beim Server angemeldeten Sessions an. Der Server liefert dem Spieler die Beschreibungen.
-  // ci  -> s   - SessionListRequestInfo
-  // s   -> ci  0 SessionListInfo
-  res.hal( {
-    links: {
-      self: '/sessions',
-      find: { href: "/sessions/{?id}", templated: true },
-      start: { href: "/sessions/{?id}/state", templated: true },
-      turn: { href: "/sessions/{?id}/turn", templated: true }
-    },
-    embeds: {
-      "sessions": storage.sessions.all.map(storage.sessions.hal)
-    }
-  });
-})
 // game
 // preparation
-// spread cards 4.4.1 - ASYNC
+// spread cards 4.4.1 - ASYNC - NUR asnyc ?
 router.get('/:sid/players/:tid/cards', (req, res) => {
-  // Nachdem eine Session durch den Spielleiter geschlossen wurde, verteilt der Server die Spielkarten an die teilnehmenden Spieler, d.h. jeder Spieler erhält eine bestimmte Anzahl an Karten.
+  // Nachdem eine Session durch den Spielleiter geschlossen wurde,
+  // verteilt der Server die Spielkarten an die teilnehmenden Spieler,
+  // d.h. jeder Spieler erhält eine bestimmte Anzahl an Karten.
   // s  -> Cs 0 CardListInfo
   res.send('cards for single user: ' + req.params.uid + ' of session: ' + req.params.sid);
 })
+
 // turn
 router.use('/:sid/turn', require('./turn'));
 
@@ -173,4 +212,5 @@ router.post('/:sid/messages', (req, res) => {
   //  s   -> Cs(ci) 0 SessionChatInfo
   res.send('session broadcast message for session: ' + req.params.sid);
 })
-module.exports = router;
+
+module.exports = router

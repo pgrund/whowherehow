@@ -3,11 +3,6 @@ const storage = require('../storage');
 
 const SERVER_PWD = "wfw_aldi_nord";
 
-router.get('/ping', (req, res) => {
-  res.send('pong');
-});
-
-
 function authenticatedUser (req, res, next) {
   if(!req.cookies.privateId) {
     res.status(401).send('no privateId');
@@ -48,6 +43,12 @@ router.post('/players', (req, res) => {
   storage.users.all.push(newUser);
   let resUser = Object.assign({}, storage.users.hal(newUser));
   resUser.data.privateId = user.privateId;
+  req.wss.sendToAllPlayers({
+    type:"NOTIFY",
+    data:{
+      action:'[Notification] Player added',
+      payload: storage.users.hal(newUser)
+    }});
   res.cookie('privateId', user.privateId);
   res.hal(resUser);
 });
@@ -73,6 +74,12 @@ router.put('/players/:uid', (req, res) => {
   res.cookie('privateId', user.privateId);
   let resUser = Object.assign({}, storage.users.hal(user));
   resUser.data.privateId = user.privateId;
+  req.wss.sendToAllPlayers({
+    type:"NOTIFY",
+    data:{
+      action:'[Notification] Player Re-Login',
+      payload: user.name
+    }});
   res.hal(resUser);
 });
 

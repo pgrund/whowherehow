@@ -1,4 +1,5 @@
 const router = require('express').Router({mergeParams: true});
+const storage = require('../storage');
 
 router.use(function(req, res, next) {
   console.log('turn router for session ' + req.params.sid, req.session, req.auth);
@@ -10,6 +11,13 @@ router.get('/', (req, res) => { // '/{sid}/users;status=current'
   //Der Server teilt den Spielern einer Session mit, wer am Zug ist
   // s  -> Cs 0 PlayerDrawInfo
   let user = req.session.teamMates[req.session.activePlayerIndex];
+  req.wss.sendToSessionOfPlayer({
+    type: "GAME",
+    data: {
+      action: '[Game] Next Player',
+      payload: ''
+    }
+  }, req.auth.name);
   res.send('next/current player:' + user);
 })
 // roll dice 4.5.2.a - +ASYNC
