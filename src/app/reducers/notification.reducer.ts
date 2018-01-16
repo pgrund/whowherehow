@@ -1,15 +1,18 @@
 import * as notify from '@app/actions/notification.actions';
 
 import { Chat } from '@app/model/chat';
+import { Player } from '@app/model/player';
 
 export type State = {
   error: Error[],
   messages: Chat[],
+  info: (Player |string)[],
 }
 
 export const initialState: State = {
   error: [],
-  messages: []
+  messages: [],
+  info: []
 }
 
 export function reducer(state = initialState, action: notify.Actions): State {
@@ -38,7 +41,6 @@ export function reducer(state = initialState, action: notify.Actions): State {
       };
     }
 
-    case notify.SEND_MESSAGE_SUCCESS:
     case notify.RECEIVED_MESSAGE: {
       return {
         ...state,
@@ -46,6 +48,13 @@ export function reducer(state = initialState, action: notify.Actions): State {
       };
     }
 
+    case notify.NOTIFY_PLAYER_ADDED:
+    case notify.NOTIFY_PLAYER_DROPPED: {
+      return {
+        ...state,
+        info: [(<Player>action.payload), ...state.info],
+      };
+    }
     default: {
       return state;
     }
@@ -54,3 +63,4 @@ export function reducer(state = initialState, action: notify.Actions): State {
 
 export const getErrors = (state:State) => state.error;
 export const getMessages = (state:State) => state.messages;
+export const getInfos = (state:State) => state.info;

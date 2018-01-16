@@ -42,7 +42,7 @@ class DisplaySession extends Session {
 })
 export class SessionListComponent implements OnInit, OnDestroy {
 
-  displayedColumns = ['sessionName', 'players', 'actions', '_links'];
+  displayedColumns = ['sessionName', 'players', '_links', 'actions'];
   dataSource = new SessionListDataSource(this.store.select(getSessions));
 
   me: Player;
@@ -81,7 +81,7 @@ export class SessionListComponent implements OnInit, OnDestroy {
   }
 
   closeSession(sessionLink: string) {
-    this.dummy('CLOSE SESSION', sessionLink);
+    this.store.dispatch(new sessions.CloseSessionAction(sessionLink));
   }
   joinSession(sessionLink: string) {
     this.store.dispatch(new sessions.JoinAction(sessionLink));

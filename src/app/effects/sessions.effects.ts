@@ -56,10 +56,21 @@ export class SessionsEffects {
       .switchMap((name: string) => this.http.post('/api/sessions', { sessionName: name })
         // If successful, dispatch success action with result
         .map((data:any) => {
-          console.log(data);
           return new sessions.CreateSessionSuccessAction(<Session>data)
         })
         // If request fails, dispatch failed action
         .catch((err) => Observable.of(new sessions.LoadFailAction(err)))
       );
+
+      @Effect() close$ = this.actions$
+          .ofType(sessions.CLOSE_SESSION)
+          .map((action: sessions.CloseSessionAction) => action.payload)
+          .switchMap((closeLink: string) => this.http.put('/api' + closeLink, null)
+            // If successful, dispatch success action with result
+            .map((data:any) => {
+              return new sessions.CloseSessionSuccessAction(<Session>data)
+            })
+            // If request fails, dispatch failed action
+            .catch((err) => Observable.of(new sessions.LoadFailAction(err)))
+          );
 }

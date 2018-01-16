@@ -28,6 +28,8 @@ export const getErrors         = createSelector(getMessages, notify.getErrors);
 export const getLastError      = createSelector(getErrors, errors => errors.length > 0 ? errors[0] : null);
 export const getChatMessages   = createSelector(getMessages, notify.getMessages);
 export const getLastChatMessage= createSelector(getChatMessages, chats => chats.length > 0 ? chats[0] : null);
+export const getInfos          = createSelector(getMessages, notify.getInfos);
+export const getLastInfo       = createSelector(getInfos, infos => infos.length > 0 ? infos[0]: null);
 
 export const getAuth           = (state:State) => state.auth;
 export const getMyInfo         = createSelector(getAuth, login.getMyInfo);
@@ -39,4 +41,6 @@ export const getPlayersLoaded  = createSelector(getPlayer, (player) => player.lo
 
 export const getSession        = (state: State) => state.session;
 export const getSessions       = createSelector(getSession, session.getSessions);
+export const getSingleSession  = (id:number) => createSelector(getSessions, sessions => sessions.find(s => s._links.self.href.endsWith('/'+id)));
+export const getActiveSession  = (id:number) => createSelector(getSingleSession(id), session => session._links.turn != null);
 export const getSessionsLoaded = createSelector(getSession, (session) => session.loaded);

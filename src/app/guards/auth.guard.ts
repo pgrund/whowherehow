@@ -40,7 +40,6 @@ export class AuthGuard implements CanActivate{ //}, CanActivateChild, CanLoad {
     return this.store.select(isAuthenticated)
       .pipe(
         tap(authenticated => {
-          console.log(isAuthenticated && document.cookie.indexOf('privateId')>-1);
           if(!authenticated) {
             let go = new RouterActions.Go({
               path:['login'],
@@ -61,7 +60,6 @@ export class AuthGuard implements CanActivate{ //}, CanActivateChild, CanLoad {
   }
 
   canLoad(route: Route): Observable<boolean> | boolean {
-    console.log('auth checks for loading')
     return this.checkStore();
   }
 }

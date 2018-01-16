@@ -18,6 +18,7 @@ import { PlayerDetailComponent } from '@app/player/player-detail/player-detail.c
 import { SessionListComponent } from '@app/session/session-list/session-list.component';
 import { SessionDetailComponent } from '@app/session/session-detail/session-detail.component';
 import { SessionNewComponent } from './session/session-new/session-new.component';
+import { SessionTurnComponent } from './session/session-turn/session-turn.component';
 import { ChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
@@ -55,8 +56,15 @@ const routes: Routes = [
       },
       {
         path: ":sid",
-        component: SessionDetailComponent,
-        canActivate: [ fromGuards.PlayersGuard ]
+        children: [{
+          path: "",
+          component: SessionDetailComponent,
+          canActivate: [ fromGuards.PlayersGuard ],
+        },{
+          path :"turn",
+          component: SessionTurnComponent,
+          canActivate: [ fromGuards.ActiveSessionGuard ]
+        }]
       }
     ]
   },

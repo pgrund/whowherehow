@@ -24,7 +24,7 @@ export class AppComponent implements OnDestroy {
 
   private subscriptionMe: Subscription;
   private subscriptionError: Subscription;
-  private subscriptionChat: Subscription;
+  private subscriptionInfo: Subscription;
 
   constructor(private store:Store<State>, public snackBar: MatSnackBar) {
     this.subscriptionMe = this.store.select(getMyInfo).subscribe( me => {
@@ -40,10 +40,14 @@ export class AppComponent implements OnDestroy {
         });
       }
     });
-    this.subscriptionChat = this.store.select(getLastChatMessage).subscribe( (msg:Chat) => {
+    this.subscriptionInfo = this.store.select(getLastChatMessage).subscribe( (msg:Chat) => {
       if(msg) {
         let snackBarRef = this.snackBar.openFromComponent(ChatInfoComponent, { data: msg, panelClass: "chat-info" });
         snackBarRef.instance.snackbar = snackBarRef;
+        snackBarRef.afterDismissed().subscribe(() => {
+          console.log('dismissed, auto ack ... ', msg);
+          this.store.dispatch(new AckErrorAction(0));
+        });
       }
     });
   }

@@ -26,6 +26,7 @@ import {
   MatTableModule,
   MatExpansionModule,
   MatListModule,
+  MatSelectModule,
   MatSnackBarModule,
 } from "@angular/material";
 
@@ -56,6 +57,7 @@ import { environment } from '../environments/environment';
 import { ErrorComponent } from './error/error.component';
 import { ChatInfoComponent } from './chat/chat-info.component';
 import { ChatComponent } from './chat/chat.component';
+import { SessionTurnComponent } from './session/session-turn/session-turn.component';
 
 
 @NgModule({
@@ -67,6 +69,7 @@ import { ChatComponent } from './chat/chat.component';
     ErrorComponent,
     ChatInfoComponent,
     ChatComponent,
+    SessionTurnComponent,
   ],
   entryComponents: [
     ErrorComponent,
@@ -105,6 +108,7 @@ import { ChatComponent } from './chat/chat.component';
     MatExpansionModule,
     MatListModule,
     MatSnackBarModule,
+    MatSelectModule,
     ReactiveFormsModule,
   ],
   providers: [

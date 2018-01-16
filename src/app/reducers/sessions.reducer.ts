@@ -23,7 +23,8 @@ export function reducer(state = initialState, action: sessions.Actions): State {
     case sessions.LOAD_ALL:
     case sessions.KICK_OUT:
     case sessions.JOIN:
-    case sessions.CREATE_SESSION: {
+    case sessions.CREATE_SESSION:
+    case sessions.CLOSE_SESSION: {
       return {
         ...state,
         loaded: false,
@@ -64,7 +65,15 @@ export function reducer(state = initialState, action: sessions.Actions): State {
         loading: false,
       };
     }
-
+    case sessions.CLOSE_SESSION_SUCCESS: {
+      let updated: Session = (<sessions.CloseSessionSuccessAction>action).payload;
+      return {
+        ...state,
+        sessions: state.sessions.filter(s => s.sessionName != updated.sessionName).concat(updated),
+        loaded: true,
+        loading: false,
+      };
+    }
     default: {
       return state;
     }

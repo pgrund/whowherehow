@@ -10,7 +10,9 @@ export const JOIN_SUCCESS =           '[Sessions] Join Success';
 export const KICK_OUT =               '[Sessions] Kick Out Player';
 export const KICK_OUT_SUCCESS =       '[Sessions] Kick Out Player Success';
 export const CREATE_SESSION =         '[Sessions] Create New Session';
-export const CREATE_SESSION_SUCCESS = '[Sessions] Created New Session';
+export const CREATE_SESSION_SUCCESS = '[Sessions] Create Session Success';
+export const CLOSE_SESSION =          '[Sessions] Close Session';
+export const CLOSE_SESSION_SUCCESS =  '[Sessions] Close Session Success';
 /**
  * Load Sessions Actions
  */
@@ -67,9 +69,23 @@ export class CreateSessionSuccessAction implements Action {
   constructor(public payload: Session) { }
 }
 
+export class CloseSessionAction implements Action {
+  readonly type = CLOSE_SESSION;
+
+  constructor(public payload: string) { }
+}
+
+export class CloseSessionSuccessAction implements Action {
+  readonly type = CLOSE_SESSION_SUCCESS;
+
+  constructor(public payload: Session) { }
+}
+
+
 export type Actions =
   | LoadAllAction | LoadAllSuccessAction
   | JoinAction | JoinSuccessAction
   | KickOutAction | KickOutSuccessAction
   | CreateSessionAction | CreateSessionSuccessAction
+  | CloseSessionAction | CloseSessionSuccessAction
   | LoadFailAction;

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
 
@@ -23,7 +23,7 @@ export class SessionNewComponent implements OnInit {
       Validators.maxLength(20),
     ]);
 
-  constructor(private store:Store<State>, private fb:FormBuilder) {}
+  constructor(private store:Store<State>) {}
 
   ngOnInit() {}
 

@@ -36,4 +36,12 @@ export class NotificationEffects {
       .map((action:notify.SendAction) => action.payload)
       .do((message:Chat) => this.wsService.sendMessage(message))
       .map((message:Chat) => new notify.SendSuccessAction(message))
+
+  @Effect() reloadPlayers$:any = this.actions$
+      .ofType(notify.NOTIFY_PLAYER_ADDED, notify.NOTIFY_PLAYER_DROPPED)
+      .map((action: notify.Actions) => new player.LoadAllAction());
+
+  @Effect() reloadSessions$:any = this.actions$
+      .ofType(notify.NOTIFY_SESSION_CLOSED, notify.NOTIFY_PLAYER_DROPPED_SESSION)
+      .map((action: notify.Actions) => new session.LoadAllAction());
 }

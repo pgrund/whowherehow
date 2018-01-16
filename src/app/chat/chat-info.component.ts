@@ -12,6 +12,7 @@ import { Chat } from '@app/model/chat';
 
 export class ChatInfoComponent {
    public snackbar: MatSnackBarRef<ChatInfoComponent>;
+
    constructor(@Inject(MAT_SNACK_BAR_DATA) public msg: Chat) {
      //setTimeout(() => this.snackbar.dismiss(), 7500);
    }

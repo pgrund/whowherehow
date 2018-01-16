@@ -19,13 +19,25 @@ export class WebSocketService {
    console.log('init websocket ...');
    this.socket$ = Observable.webSocket('ws://localhost:3000/api');
 
-   this.socket$.retry().subscribe(
+   this.socket$.retry(5).subscribe(
        (msg) => {
-         console.log('message received: ' , msg);
-         if(msg.type == 'CHAT') {
-           this.store.dispatch(new ReceivedAction(msg.data));
-         } else {
-           console.warn('unknown ws received', msg);
+         try {
+           console.log('message received: ' , msg);
+           switch(msg.type) {
+             case 'CHAT': {
+               this.store.dispatch(new ReceivedAction(msg.data));
+               break;
+             }
+             case 'NOTIFY': {
+               this.store.dispatch({ type:msg.data.action, payload:msg.data.payload});
+                 break;
+             }
+             default: {
+               console.warn('unknown ws received', msg);
+             }
+           }
+         } catch(e) {
+           console.error(e, msg);
          }
        },
        (err) => console.log(err),
