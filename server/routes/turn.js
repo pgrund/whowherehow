@@ -12,9 +12,9 @@ router.get('/', (req, res) => { // '/{sid}/users;status=current'
   // s  -> Cs 0 PlayerDrawInfo
   let user = req.session.teamMates[req.session.activePlayerIndex];
   req.wss.sendToSessionOfPlayer({
-    type: "GAME",
+    type: "NOTIFY",
     data: {
-      action: '[Game] Next Player',
+      action: '[Notification] Player Draw',
       payload: ''
     }
   }, req.auth.name);

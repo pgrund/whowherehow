@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const storage = require('../storage');
+const jwt = require('jsonwebtoken');
+const fs = require("fs");
 
 const SERVER_PWD = "wfw_aldi_nord";
 
@@ -23,33 +25,46 @@ router.post('/players', (req, res) => {
   // ci -> s        - PlayerAddRequestInfo
   // s  -> ci       0 PlayerAdConfirmInfo
   // s  -> C        1 PlayerAddedInfo
-  let user = req.body;
-  if(!user.name || !user.password) {
+  if(!req.body.name || !req.body.password) {
     res.status(400).send('missing name or password');
     return res;
   }
-  if(storage.users.all.find( u => u.name == user.name) != null) {
-    res.status(400).send('player already exists');
-    return res;
-  }
-  if(SERVER_PWD != user.password) {
+
+  if(SERVER_PWD != req.body.password) {
     res.status(403).send('invalid password for accessing this server');
     return res;
   }
-  user.playerId = Math.max(...(storage.users.all.map(u => u.playerId).concat(0))) +1;
-  user.privateId = new Date().getTime();
-  let newUser = Object.assign({}, storage.users.empty, user);
-  delete newUser.password;
-  storage.users.all.push(newUser);
-  let resUser = Object.assign({}, storage.users.hal(newUser));
-  resUser.data.privateId = user.privateId;
+
+  user = storage.users.all.find( u => u.name == user.name);
+  if( user == null) {
+    user = {
+      ...storage.users.empty,
+      name: req.body,
+      playerId: Math.max(...(storage.users.all.map(u => u.playerId).concat(0))) +1
+    }
+    storage.users.all.push(user);
+  }
+
+
+  // const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+  //               algorithm: 'RS256',
+  //               expiresIn: 120,
+  //               subject: userId
+  //           })
+  //
+  // res.status(200).json({
+  //   idToken: jwtBearerToken,
+  //   expiresIn: ...
+  // });
+  let resUser = Object.assign({}, storage.users.hal(user));
+  //resUser.data.privateId = user.privateId;
   req.wss.sendToAllPlayers({
     type:"NOTIFY",
     data:{
       action:'[Notification] Player added',
       payload: storage.users.hal(newUser)
     }});
-  res.cookie('privateId', user.privateId);
+  //res.cookie('privateId', user.privateId);
   res.hal(resUser);
 });
 

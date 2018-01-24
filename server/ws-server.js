@@ -34,11 +34,6 @@ module.exports = function(server) {
    wss.sendToPlayer = function(data, receiverId) {
      let clients = [...wss.clients].filter(c => c.player.playerId == receiverId);
      wss.sendToWsClients(data, clients);
-     if(client) {
-       client.send(JSON.stringify(data));
-     } else {
-       console.error('no client found for player %s', receiverId);
-     }
    }
 
    // broadcast to all known players
@@ -50,7 +45,7 @@ module.exports = function(server) {
      let playersSession = storage.sessions.all
          .find(s => s.teamMates.includes(playerId));
      if(!playersSession) {
-       console.error('player %s is not participating in any session', playerId);
+       console.error('[websocket] player %s is not participating in any game', playerId);
        return
      }
      let clients = playersSession.teamMates
@@ -58,18 +53,18 @@ module.exports = function(server) {
      if(clients && clients.length > 0) {
        wss.sendToWsClients(data, clients);
      } else {
-       console.error('no clients found for session of player %s', playerId);
+       console.error('[websocket] no clients found for session of player %s', playerId);
      }
    }
 
    // Broadcast to  clients
    wss.sendToWsClients = function broadcast(data, clients, ws = null) {
      clients.forEach( (client) => {
-       if ((!ws || client !== ws) && client.readyState === WebSocket.OPEN) {
-         console.debug('sending to %s: %s', client.player.name, data);
+       if ((!ws || client !== ws) && client && client.readyState === WebSocket.OPEN) {
+         console.debug('[websocket] sending to %s: %s', client.player ? client.player.name : 'unknown', JSON.stringify(data));
          client.send(JSON.stringify(data));
        } else {
-         console.warn('cannot send to %s ... ', client.player.name);
+         console.warn('[websocket] cannot send to %s ... ', client && client.player ? client.player.name: client);
        }
      });
    }
@@ -77,21 +72,21 @@ module.exports = function(server) {
    wss.on('connection', function connection(ws, req) {
      ws.player = req.user;
      ws.isAlive = true;
-     console.debug('player %s connected', ws.player.name);
+     console.debug('[websocket] player %s connected', ws.player.name);
 
      // ws.on('open', function() {
      //    console.log('open for connection ...')
      //  });
      ws.on('ping', function(data) {
-       console.debug('ping received from %s', ws.player.name);
-       ws.pong(() => {console.log('sending pong to %s', ws.player.name)});
+       console.debug('[websocket] ping received from %s', ws.player.name);
+       ws.pong(() => {console.log('[websocket] sending pong to %s', ws.player.name)});
      });
      ws.on('pong', function(data) {
-       console.debug('pong received from %s', ws.player.name);
+       console.debug('[websocket] pong received from %s', ws.player.name);
        ws.isActive = true;
      });
      ws.on('message', function (data) {
-       console.log('received from %s: %s', ws.player.name, data);
+       console.log('[websocket] received from %s: %s', ws.player.name, data);
        let updatedMsg = {};
        try {
           updatedMsg = JSON.parse(data);
@@ -109,30 +104,30 @@ module.exports = function(server) {
            if(client) {
              wss.sendToWsClients(updatedMsg, [client]);
            } else {
-             console.warn('no active ws client found for %s', updatedMsg.data.receiverId);
+             console.warn('[websocket] no active ws client found for %s', updatedMsg.data.receiverId);
            }
          } else {
            wss.sendToSessionOfPlayer(updatedMsg, ws.player.playerId);
          }
 
        } else {
-         console.warn('unknown type', updatedMsg, data);
+         console.warn('[websocket] unknown type', updatedMsg, data);
        }
      });
      ws.on('close', function (code, reason) {
-       console.warn('closing connection for %s due to %s (%s)', ws.player.name, reason, code);
+       console.warn('[websocket] closing connection for %s due to %s (%s)', ws.player.name, reason, code);
      });
      ws.on('error', function (err) {
-       console.error('error for ' + ws.player.name, err);
+       console.error('[websocket] error for ' + ws.player.name, err);
      });
    });
 
    // ping isAlive for all clients
    const interval = setInterval(function ping() {
      wss.clients.forEach(function each(ws) {
-       console.debug('ping client %s', ws.player.name);
+       console.debug('[websocket] ping client %s', ws.player.name);
        if (ws.isAlive === false) {
-         console.warn('inactive player %s, gonna terminate ...', ws.player.name);
+         console.warn('[websocket] inactive player %s, gonna terminate ...', ws.player.name);
          return ws.terminate();
        }
 

@@ -33,7 +33,13 @@ router.get('/', (req, res) => {
       find: { href: "/players/{?id}", templated: true }
     },
     embeds: {
-      "players": storage.users.all.map(storage.users.hal)
+      "players": storage.users.all.map( user => {
+        let halUser = storage.users.hal(user);
+        if(req.auth.playerId == user.playerId) {
+          halUser.cards = user.cards;
+        }
+        return halUser;
+      })
     }
   });
 })
@@ -43,7 +49,11 @@ router.get('/:uid', (req, res) => {
   // Ein Spieler fordert eine Beschreibung eines anderen Spielers an. Der Server liefert dem Spieler die Beschreibung.
   // ci -> s  - PlayerRequestInfo
   // s  -> ci 0 PlayerInfo
-  res.hal(storage.users.hal(req.user));
+  let halUser = storage.users.hal(req.user);
+  if(req.auth.playerId == req.user.playerId) {
+    halUser.cards = req.user.cards;
+  }
+  res.hal(halUser);
 })
 
 // logout 4.1.3
