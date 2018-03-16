@@ -1,0 +1,58 @@
+<div class="example-container mat-elevation-z8">
+    <div class="example-header">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+    </div>
+
+    <mat-table #table [dataSource]="dataSource">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.name}}
+                <mat-icon *ngIf="element._links.admin">supervisor_account</mat-icon>
+                <mat-icon *ngIf="debug" color="primary" (click)="delete(element)">delete_forever</mat-icon>
+            </mat-cell>
+        </ng-container>
+
+        <!-- Links Column -->
+        <ng-container matColumnDef="_links">
+            <mat-header-cell *matHeaderCellDef> Hyperlinks </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <!-- structural links -->
+                <mat-chip-list>
+                    <mat-chip [routerLink]="element._links.self.href" [selected]="me && me.name == element.name" title="about" color="primary">
+                        about {{ element.name == me.name ? 'me' : ''}}
+                    </mat-chip>
+                    <mat-chip *ngIf="element._links.game" [routerLink]="element._links.game.href" [selected]="shareGame(element._links.game)" color="primary" title="joined game">
+                        {{ shareGame(element._links.game) ? 'my' : 'his' }} game
+                    </mat-chip>
+                </mat-chip-list>
+            </mat-cell>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button *ngIf="amAdmin(element) && !(element._links.game || element._links.approve)" mat-raised-button color="primary" (click)="invite(element)">
+            invite to game
+          </button>
+                <button *ngIf="adminOfSharedGame(element)" mat-raised-button color="accent" (click)="kickOutOfSession(element)">
+             <span *ngIf="!element._links.approve">kick out</span>
+             <span *ngIf="element._links.approve">revoke invitation</span>
+          </button>
+                <button *ngIf="element.name == me.name && element._links.approve" mat-raised-button color="accent" (click)="kickOutOfSession(element)">
+             reject join request
+          </button>
+                <button *ngIf="element._links.approve" mat-raised-button [color]="element.name == me.name ? 'primary' : 'accent'" (click)="approve(element)">
+            {{ element._links.approve.title }}
+          </button>
+                <button mat-raised-button> chat </button>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

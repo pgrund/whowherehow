@@ -1,0 +1,11 @@
+<mat-toolbar class="breadcrumbs">
+    <ul>
+        <ng-content></ng-content>
+    </ul>
+    <!--
+             <li *ngFor="let breadcrumb of breadcrumbs; let last = last">
+                <a *ngIf="!!breadcrumb.path && !last" [routerLink]="breadcrumb.path">{{breadcrumb.name}}</a>
+                <span *ngIf="!breadcrumb.path || last">{{breadcrumb.name}}</span>
+            </li>
+         -->
+</mat-toolbar>

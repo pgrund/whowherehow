@@ -1,0 +1,46 @@
+{
+    "NAV": {
+        "AboutMe": "About Me",
+        "Games": "Games",
+        "Players": "Players",
+        "MyGame": "My Game",
+        "Administration": "Administration",
+        "Chat": "Chat",
+        "Login": "Login",
+        "Logout": "Logout",
+        "Title": "Cluedo NG",
+        "ChangeLanguage": "Change language"
+    },
+    "PERSON": {
+        "BARONIN_VON_PORZ": "Mrs Peacock",
+        "FRAEULEIN_GLORIA": "Miss Scarlet",
+        "FRAU_WEISS": "Mrs. White",
+        "OBERST_VON_GATOW": "Colonel Mustard",
+        "PROFESSOR_BLOOM": "Professor Plum",
+        "REVEREND_GRUEN": "Reverend Green",
+        "Title": "Persons"
+    },
+    "ROOM": {
+        "ARBEITSZIMMER": "Study",
+        "BIBLIOTHEK": "Library",
+        "BILLARDZIMMER": "Billiard Room",
+        "HALLE": "Hall",
+        "KUECHE": "Kitchen",
+        "MUSIKZIMMER": "Ballroom",
+        "SALON": "Lounge",
+        "SPEISEZIMMER": "Dining Room",
+        "WINTERGARTEN": "Conservatory",
+        "Title": "Rooms"
+    },
+    "TOOL": {
+        "DOLCH": "Knife",
+        "HEIZUNGSROHR": "Lead Pipe",
+        "LEUCHTER": "Candlestick",
+        "PISTOLE": "Revolver",
+        "ROHRZANGE": "Wrench",
+        "SEIL": "Rope",
+        "Title": "Tools"
+    },
+    "AllOfSession": "all players of session {{game}}",
+    "PlayerToReceive": "player to receive"
+}

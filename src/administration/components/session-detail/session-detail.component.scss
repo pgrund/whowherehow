@@ -1,0 +1,79 @@
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+ mat-card, mat-card-header {
+   text-align:center;
+ }
+ mat-card-header>div.mat-card-header-text {
+   width: 100%
+ }
+
+  mat-card.pending {
+    opacity: .4;
+     & button {
+       cursor: not-allowed;
+        pointer-events: none;
+     }
+  }
+ mat-card-title-group *[mat-card-avatar] {
+   //background-size: cover;
+    &.blue {
+      background-image: url('/assets/cards/Baronin_von_Porz_klein.jpg');
+    }
+ }
+
+ mat-card-content {
+   .mat-icon.material-icons {
+     color:darkgray;
+     font-size: 5em;
+     height: 1em;
+     width: 2.5em;
+   }
+   .title {
+     color: whitesmoke;
+     border: solid thin black;
+   }
+   img.mat-card-md-image {
+     vertical-align: middle;
+     background-color: white;
+     border: 2px solid black;
+     border-radius: 50%;
+     box-shadow: 5px 5px 5px darkgray;
+   }
+   &.blue {
+     img.mat-card-md-image {
+       border-color: blue;
+     }
+     .title {
+       background-color: blue;
+     }
+   }
+   &.green {
+     img.mat-card-md-image {
+       border-color: green;
+     }
+     .title {
+       background-color: green;
+     }
+   }
+   &.red {
+     img.mat-card-md-image {
+       border-color: red;
+     }
+     .title {
+       background-color: red;
+     }
+   }
+   &.white {
+     .title {
+       color: black;
+     }
+   }
+ }

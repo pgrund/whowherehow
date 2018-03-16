@@ -1,0 +1,12 @@
+button.close {
+  position:absolute;
+  top:0px;
+  right:0px;
+}
+button.close mat-icon {
+  text-shadow: 3px 2px black;
+}
+.mat-snack-bar-container {
+    background: whitesmoke;
+    color: darkgray;
+}

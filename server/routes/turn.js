@@ -2,24 +2,44 @@ const router = require('express').Router({mergeParams: true});
 const storage = require('../storage');
 
 router.use(function(req, res, next) {
-  console.log('turn router for session ' + req.params.sid, req.session, req.auth);
+  if(req.session.state != 'CLOSED') {
+    return res.status(400).send('session has invalid state, only closed ones are valid');
+  }
+  if(req.session.teamMates.indexOf(req.auth.playerId)<0) {
+    return res.status(403).send('only members of session allowed');
+  }
+  if(!(req.auth.state == 'JOINED' || req.auth.state == 'DIRECTOR')) {
+    console.log(req.auth.state);
+    return res.status(401).send('only joined members of session allowed');
+  }
+  req.session.players = req.session.teamMates.map( pId => storage.users.all.find(user => user.playerId == pId));
+  req.session.cards = storage.cards;
   next();
 });
 // active turn
-// next player 4.5.1 - ASYNC
+// next player 4.5.1 - ASYNC ==> nope
 router.get('/', (req, res) => { // '/{sid}/users;status=current'
   //Der Server teilt den Spielern einer Session mit, wer am Zug ist
   // s  -> Cs 0 PlayerDrawInfo
-  let user = req.session.teamMates[req.session.activePlayerIndex];
-  req.wss.sendToSessionOfPlayer({
-    type: "NOTIFY",
-    data: {
-      action: '[Notification] Player Draw',
-      payload: ''
-    }
-  }, req.auth.name);
-  res.send('next/current player:' + user);
+
+  // session + players + cards + links
+  let session = {
+    ...req.session,
+    players: req.session.players.map(storage.users.hal)
+  }
+  let halSession = storage.sessions.hal(session);
+  // halSession.players = halSession.links.players.map( p => storage.users.hal(storage.users.all.find(user => user.name == p.name)))
+  // halSession.cards = storage.cards;
+  res.hal(halSession);
 })
+
+router.get('/cards', (req, res) => {
+  res.json({
+    cards: storage.cards,
+    yours: req.user.cards
+  });
+})
+
 // roll dice 4.5.2.a - +ASYNC
 router.post('/cast', (req, res) => { // '/{sid}/users/{uid}/cast', '/{sid}/current/cast'
   // .. fordert beim Server ein Würfelergebnis an.

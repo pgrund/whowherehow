@@ -1,0 +1,5 @@
+<cluedo-breadcrumb-list>
+    <li><a routerLink="/sessions">All Games</a></li>
+    <li>{{(session$ | async).sessionName}}</li>
+</cluedo-breadcrumb-list>
+<cluedo-session-detail [session]="session$ | async" [me]="myself$ | async"></cluedo-session-detail>

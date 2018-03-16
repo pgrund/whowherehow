@@ -1,0 +1,51 @@
+<mat-toolbar>
+    <ng-container *ngIf="(myself$ | async) as me">
+
+        <button mat-icon mat-raised-button color="primary" [matMenuTriggerFor]="adminMenu">
+        <mat-icon>more_vert</mat-icon>
+        <span translate>NAV.Administration</span>
+      </button>
+        <mat-menu #adminMenu="matMenu">
+            <button mat-menu-item [routerLink]="me._links.self.href">
+          <mat-icon>info_outline</mat-icon>
+          <span translate>NAV.AboutMe</span>
+        </button>
+            <button mat-menu-item routerLink="/sessions">
+          <mat-icon>videogame_asset</mat-icon>
+          <span translate>NAV.Games</span>
+        </button>
+            <button mat-menu-item routerLink="/players">
+          <mat-icon>recent_actors</mat-icon>
+          <span translate>NAV.Players</span>
+        </button>
+            <button mat-menu-item routerLink="/chat">
+          <mat-icon>chat</mat-icon>
+          <span translate>NAV.Chat</span>
+        </button>
+        </mat-menu>
+
+        <button mat-menu-item *ngIf="me._links.turn" routerLink="/turn">
+        <mat-icon>play_arrow</mat-icon>
+        <span translate>NAV.MyGame</span>
+      </button>
+    </ng-container>
+
+    <span class="example-fill-remaining-space"></span>
+    <button *ngIf="!(isAuthenticated$ | async) || debug" mat-icon mat-raised-button routerLink="/login">
+    <mat-icon>account_circle</mat-icon>
+    <span translate>NAV.Login</span>
+  </button>
+    <button *ngIf="(isAuthenticated$ | async);" mat-icon mat-raised-button (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span translate>NAV.Logout</span>
+  </button>
+
+    <button mat-raised-button [matMenuTriggerFor]="langMenu" [title]="'NAV.ChangeLanguage' | translate">
+    <mat-icon>g_translate</mat-icon>
+  </button>
+    <mat-menu #langMenu="matMenu">
+        <button mat-menu-item (click)="selectLanguage('en');">English</button>
+        <button mat-menu-item (click)="selectLanguage('de');">Deutsch</button>
+    </mat-menu>
+
+</mat-toolbar>

@@ -1,0 +1,109 @@
+$width: 100px;
+$colors: (
+  BARONIN_VON_PORZ: blue,
+  FRAU_WEISS: white,
+  FRAEULEIN_GLORIA: red,
+  OBERST_VON_GATOW: yellow,
+  PROFESSOR_BLOOM: purple,
+  REVEREND_GRUEN: green
+);
+
+@function color($key) {
+  @if map-has-key($colors, $key) {
+    @return map-get($colors, $key);
+  }
+
+  @warn "Unknown `#{$key}` in $colors.";
+  @return null;
+}
+
+@mixin colorText($card) {
+    color: color($card);
+}
+@mixin colorBorder($card) {
+  @if $card == 'FRAU_WEISS' {
+    border-color: black;
+  } @else {
+    border-color: color($card);
+  }
+}
+@mixin colorBlackWhite($card) {
+  @if $card == 'FRAU_WEISS' {
+    color: black;
+  } @else {
+    color: white;
+  }
+}
+@mixin colorBackground($card) {
+  background-color: color($card);
+}
+@mixin coloring($card) {
+  mat-card-title-group {
+    background: url('/assets/persons/' + $card + '.png') no-repeat center center;
+    background-size: $width $width;
+    border-style: solid;
+    border-width: thick;
+    @include colorBorder($card);
+    box-shadow: 5px 5px darkgray;
+  }
+  mat-card-title {
+    text-shadow: 1px 1px darkgray;
+    box-shadow: 2px 2px black;
+    border: solid thin black;
+    @include colorBlackWhite($card);
+    @include colorBackground($card);
+  }
+}
+
+mat-card-title-group {
+  width: $width;
+  height: $width;
+  border-radius: $width / 5;
+}
+mat-card-title {
+  font-size: 1em;
+  font-weight: bold;
+  position: relative;
+  background-color: rgba(250,250,250,.6);
+  width: $width * 1.3;
+  // margin-top: 50px;
+  top: $width / 2;
+  left: - $width / 5;
+  text-align: center;
+  text-shadow: 2px 2px black;
+  border-radius: $width/10;
+  transform: rotate(-30deg);
+  padding: 5px;
+}
+
+mat-card-content {
+  margin-top: 1.5em;
+}
+mat-card-header {
+  position: relative;
+  width: $width * 1.1;
+  height: $width * 1.1;
+
+  &.BARONIN_VON_PORZ {
+    @include coloring('BARONIN_VON_PORZ');
+  }
+  &.REVEREND_GRUEN {
+     @include coloring('REVEREND_GRUEN');
+  }
+  &.FRAEULEIN_GLORIA {
+     @include coloring('FRAEULEIN_GLORIA');
+  }
+  &.OBERST_VON_GATOW {
+     @include coloring('OBERST_VON_GATOW');
+  }
+  &.PROFESSOR_BLOOM {
+     @include coloring('PROFESSOR_BLOOM');
+  }
+  &.FRAU_WEISS {
+     @include coloring('FRAU_WEISS');
+  }
+}
+
+mat-card.disabled {
+  opacity: 0.4;
+}

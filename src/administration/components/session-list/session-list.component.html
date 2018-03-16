@@ -1,0 +1,47 @@
+<div class="example-container mat-elevation-z8">
+    <cluedo-session-new></cluedo-session-new>
+    <div class="example-header">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+    </div>
+
+    <mat-table #table [dataSource]="dataSource">
+        <ng-container matColumnDef="sessionName">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.sessionName}}
+                <mat-icon *ngIf="amAdmin(element)">supervisor_account</mat-icon>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="playerLinks">
+            <mat-header-cell *matHeaderCellDef> Players </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-chip *ngFor="let player of element.playerLinks; let index = index" [routerLink]="player.href" [selected]="me.name == player.name">
+                    {{ player.name }}
+                    <mat-icon *ngIf="amAdmin(element, player)">supervisor_account</mat-icon>
+                    <mat-icon *ngIf="amAdmin(element) && me.name !=player.name" matChipRemove (click)="kickOutOfSession(element._links.self.href, player.href)">cancel</mat-icon>
+                </mat-chip>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="_links">
+            <mat-header-cell *matHeaderCellDef> Hyperlinks </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <cluedo-session-links [element]="element" [me]="me"></cluedo-session-links>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <cluedo-session-actions [element]="element" [me]="me" (join)="joinSession.emit($event)" (close)="closeSession.emit($event)"></cluedo-session-actions>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+</div>

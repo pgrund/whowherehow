@@ -126,12 +126,8 @@ router.put('/:sid/state', directorOfSession, (req, res) => {
     // return res;
     console.warn('invalid state')
   }
-  if(req.session.teamMates.length < 3) {
-    res.status(400).send('not enough players, min 3');
-    return res;
-  }
-  if(req.session.teamMates.length > 6) {
-    res.status(400).send('too many players, max 6');
+  if(req.session.teamMates.length < 3 || req.session.teamMates.length > 6) {
+    res.status(400).send('amount of players mismatch(min 3, max 6)');
     return res;
   }
   // update session state and get solution for this session
@@ -143,7 +139,6 @@ router.put('/:sid/state', directorOfSession, (req, res) => {
   let cardArray = storage.cards.splitAll(updatedSession.solution, updatedSession.teamMates.length);
   storage.users.all.filter(p => req.session.teamMates.indexOf(p.playerId)>-1)
     .forEach( (user, idx) => {
-      console.log(user.playerId, idx);
       let joined = {
         ...storage.users.joined,
         teamId: storage.cards.persons[idx],
@@ -151,17 +146,16 @@ router.put('/:sid/state', directorOfSession, (req, res) => {
         cards: cardArray[idx]
       }
       let updatedUser = storage.users.update(joined, user);
-      console.log(joined, updatedUser);
     })
   // prepare response
   let halSession = storage.sessions.hal(updatedSession);
-  res.status(200).hal(halSession);
   req.wss.sendToAllPlayers({
     type:'NOTIFY',
     data:{
       action:'[Notification] Session Closed',
       playload: halSession.links.self
     }});
+  res.status(200).hal(halSession);
 })
 
 router.get('/:sid/players/', (req, res) => {
@@ -261,8 +255,9 @@ router.delete('/:sid/players/:tid', (req, res) => {
   // Der Spielleiter schließt einen Spieler aus einer Session aus. Der Ausschluß kann zu einem beliebigen Zeitpunkt erfolgen.
   // cd  -> s          - PlayerNotifyInfo
   // s   -> ciUCs(cd)  0 PlayerNotifyInfo
-  if (!(req.auth.name == req.user.name && (req.user.state == 'PENDING' || req.user.state == 'INVITED')) ||
-      req.session.directorId != req.auth.playerId ) {
+
+  if (!((req.auth.name == req.user.name && (req.user.state == 'PENDING' || req.user.state == 'INVITED')) ||
+      req.session.directorId == req.auth.playerId )) {
     // only admin and user himself allowed
     return res.status(403).send('only admin or user himself(at approval state) needed')
   }

@@ -1,0 +1,10 @@
+<div class="item">
+  <div fxFlex="row" fxLayoutWrap>
+    <mat-icon fxFlex="10" aria-label="received" [title]="'from ' + (fromMe() ? 'me' : msg.sender)">
+      {{ toSession() ? 'playlist_play' : 'play_arrow'}}
+    </mat-icon>
+    <span fxFlex="20" *ngIf="!fromMe()">({{ msg.sender }})</span>
+    <span fxFlex [class.me]="fromMe()">{{ msg.message }}</span>
+    <p fxFlex class="time">({{ msg.time | date :'short'}})</p>
+    <pre *ngIf="debug">{{ msg | json }}</pre>
+</div>

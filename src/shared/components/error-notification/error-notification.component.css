@@ -1,0 +1,33 @@
+
+header {
+  font-size: large;
+  color: black;
+  font-weight: bold;
+  text-transform: capitalize;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+}
+header mat-icon.mat-icon {
+  font-size: 2em;
+}
+
+div p {
+  font-style: italic;
+}
+
+.error {
+  border:solid thick red;
+  padding-left:0;
+  padding-right:0;
+  padding-top:0;
+}
+
+button.close {
+  position:absolute;
+  top:0px;
+  right:0px;
+}
+button.close mat-icon {
+  text-shadow: 3px 2px black;
+}

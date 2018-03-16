@@ -1,0 +1,5 @@
+<pre>{{ player | json }}</pre>
+<div *ngIf="me && me != player">
+    <p>That's me!!</p>
+    <pre>{{ me | json}}</pre>
+</div>

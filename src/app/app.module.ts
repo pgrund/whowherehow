@@ -1,80 +1,90 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule, HttpClient } from "@angular/common/http";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { Routes, RouterModule, Params, RouterStateSnapshot } from '@angular/router';
-import { StoreModule, ActionReducerMap } from '@ngrx/store';
-import { StoreRouterConnectingModule, routerReducer, RouterReducerState,
-  RouterStateSerializer} from "@ngrx/router-store";
-import { EffectsModule } from '@ngrx/effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
-// @angular/flex-layout
-import { FlexLayoutModule } from "@angular/flex-layout";
-
-// @angular/material
 import {
-  MatButtonModule,
-  MatCardModule,
-  MatIconModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatMenuModule,
-  MatTableModule,
-  MatExpansionModule,
-  MatListModule,
-  MatSelectModule,
-  MatSnackBarModule,
-} from "@angular/material";
+  Routes,
+  RouterModule,
+  Params,
+  RouterStateSnapshot
+} from "@angular/router";
+import { StoreModule, ActionReducerMap, MetaReducer } from "@ngrx/store";
+import { storeFreeze } from "ngrx-store-freeze";
+import {
+  StoreRouterConnectingModule,
+  RouterStateSerializer
+} from "@ngrx/router-store";
+import { EffectsModule } from "@ngrx/effects";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 
-
-import { AppRoutingModule } from './app-routing.module';
+import { environment } from "@env/environment";
 
 //import { ServiceWorkerModule } from '@angular/service-worker';
+import { reducers, effects, CustomSerializer } from "./store";
 
-// effects
-import { RouterEffects } from "@app/effects/router.effects";
-import { LoginEffects } from "@app/effects/login.effects";
-import { PlayerEffects } from "@app/effects/player.effects";
-import { SessionsEffects } from "@app/effects/sessions.effects";
-import { NotificationEffects } from "@app/effects/notification.effects";
+import * as fromAdmin from "@administration/guards";
+import * as fromContainers from "./containers";
+import * as fromComponents from "./components";
+import * as fromServices from "./services";
+import * as fromGuards from "./guards";
+import { SharedModule } from "@shared/shared.module";
 
-// reducers
-import {reducers} from "@app/reducers";
+export const metaReducers: MetaReducer<any>[] = !environment.production
+  ? [storeFreeze]
+  : [];
 
-// services
-import { WebSocketService } from './services/web-socket.service';
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
-import { AppComponent } from './app.component';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { NavComponent } from './nav/nav.component';
-import { LoginComponent } from './login/login.component';
-
-import { environment } from '../environments/environment';
-import { ErrorComponent } from './error/error.component';
-import { ChatInfoComponent } from './chat/chat-info.component';
-import { ChatComponent } from './chat/chat.component';
-import { SessionTurnComponent } from './session/session-turn/session-turn.component';
-
+export const ROUTES = [
+  {
+    path: "login",
+    component: fromContainers.LoginComponent
+  },
+  {
+    path: "home",
+    component: fromComponents.HomeComponent
+  },
+  {
+    path: "",
+    loadChildren: "@administration/administration.module#AdministrationModule",
+    canActivate: [fromGuards.AuthGuard],
+    data: {
+      breadcrumb: "Administration"
+    }
+  },
+  {
+    path: "chat",
+    component: fromContainers.ChatComponent,
+    canActivate: [fromAdmin.PlayersGuard]
+  },
+  {
+    path: "turn",
+    loadChildren: "@game/game.module#GameModule",
+    canLoadChildren: [fromGuards.AuthGuard]
+  },
+  {
+    path: "",
+    redirectTo: "home",
+    pathMatch: "full"
+  },
+  {
+    path: "**",
+    redirectTo: "home",
+    pathMatch: "full"
+  }
+];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NotFoundComponent,
-    LoginComponent,
-    NavComponent,
-    ErrorComponent,
-    ChatInfoComponent,
-    ChatComponent,
-    SessionTurnComponent,
-  ],
-  entryComponents: [
-    ErrorComponent,
-    ChatInfoComponent
-  ],
+  declarations: [...fromContainers.containers, ...fromComponents.components],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -82,38 +92,21 @@ import { SessionTurnComponent } from './session/session-turn/session-turn.compon
     ReactiveFormsModule,
     CommonModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
+    RouterModule.forRoot(ROUTES),
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot(effects),
     StoreRouterConnectingModule,
-    StoreModule.forRoot(reducers),
-    StoreDevtoolsModule.instrument({
-      maxAge: 10 //number of states to retain
-    }),
-    EffectsModule.forRoot([
-      RouterEffects,
-      LoginEffects,
-      PlayerEffects,
-      SessionsEffects,
-      NotificationEffects,
-    ]),
+    environment.production ? [] : StoreDevtoolsModule.instrument(),
     //ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
-    FlexLayoutModule,
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    MatTableModule,
-    MatExpansionModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatSelectModule,
-    ReactiveFormsModule,
+    SharedModule
   ],
   providers: [
-    WebSocketService,
-    ],
-  bootstrap: [AppComponent]
+    ...fromServices.services,
+    ...fromGuards.guards,
+    fromAdmin.PlayersGuard,
+    { provide: RouterStateSerializer, useClass: CustomSerializer }
+  ],
+  bootstrap: [fromContainers.AppComponent],
+  exports: [...fromContainers.containers, ...fromComponents.components]
 })
-export class AppModule { }
+export class AppModule {}

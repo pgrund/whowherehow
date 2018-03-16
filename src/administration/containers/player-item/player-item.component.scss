@@ -1,0 +1,14 @@
+ul.breadcrumbs {
+    display: block;
+    & li {
+        display: inline-block;
+        list-style: none;
+        &::before {
+            content: ">";
+            padding-right: 0.5em;
+        }
+        &:first-child::before {
+            content: "";
+        }
+    }
+}

@@ -1,0 +1,24 @@
+.mat-toolbar-row.breadcrumbs,
+.mat-toolbar-single-row.breadcrumbs {
+    height: 28px;
+    background-color: white;
+    border-bottom: solid thin whitesmoke;
+}
+
+.breadcrumbs ul {
+    font-size: 75%;
+    padding-left: 0;
+    display: block;
+    & li {
+        display: inline-block;
+        list-style: none;
+        &::before {
+            content: ">";
+            padding-left: 0.25em;
+            padding-right: 0.25em;
+        }
+        &:first-child::before {
+            content: "";
+        }
+    }
+}

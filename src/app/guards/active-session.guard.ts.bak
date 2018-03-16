@@ -1,0 +1,39 @@
+import { Injectable } from '@angular/core';
+import { CanActivate, CanActivateChild,
+ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+
+import { tap, filter, take, switchMap, catchError} from 'rxjs/operators';
+
+import { AdministrationState, isSessionSelected } from '@administration/store';
+import * as SessionActions from "@app/actions/sessions.actions";
+
+
+@Injectable()
+export class ActiveSessionGuard implements CanActivate {
+
+  constructor(private store:Store<State>) {}
+
+    canActivate(): Observable<boolean> {
+      return this.checkStore().pipe(
+        switchMap(() => of(true)),
+        catchError(() => of(false))
+      );
+    }
+
+    checkStore(url: string = ''): Observable<boolean> {
+      return this.store.select(isSessionSelected)
+      .pipe(
+        tap(isCurrent => {
+          if(!isCurrent) {
+            console.debug('active session needs data');
+            this.store.dispatch(new SessionActions.ActiveSessionAction());
+          }
+        }),
+        take(1)
+      );
+    }
+}

@@ -1,0 +1,70 @@
+<div>
+    <mat-accordion class="example-headers-align">
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Infos on Game</mat-panel-title>
+                <mat-panel-description>
+                    Infos on game
+                    <mat-icon>info_circle</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <pre>{{ session | json}}</pre>
+            <button *ngIf="session._links.start" mat-raised-button color="accent" [title]="session._links.start.title" [disabled]="!iAmAdminOfGame(session._links)" (click)="closeSession.emit(session)">
+
+     close
+    </button>
+
+            <mat-action-row>
+                <button mat-button color="primary" (click)="nextStep()">Next</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+        <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Players in Game</mat-panel-title>
+                <mat-panel-description>
+                    {session._links.players.length, plural, =0 {NO} =1 {Just one player} other {{{session._links.players.length}} players}} in this game {{session.players && session._links.players.length != session.players.length ? '(and some pending)':''}}
+                    <mat-icon>account_circle</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="cards" fxLayout="row" fxLayoutAlign="space-between center">
+                <section *ngFor="let player of session.players">
+                    <header>
+                        {{ player.name }}
+                        <mat-icon *ngIf="player._links.admin" [color]="isMe(player._links) ? 'primary' : 'default'">supervisor_account</mat-icon>
+                        <mat-icon *ngIf="!session._links.turn && !player._links.admin" [color]="isMe(player._links) ? 'primary' : 'default'">account_circle</mat-icon>
+                    </header>
+                    <!-- <cluedo-card *ngIf="session._links.turn" [card]="player.teamId"></cluedo-card> -->
+                    <footer>
+                        <button mat-button [routerLink]="player._links.self.href">about</button>
+                        <button mat-button>delete</button>
+                    </footer>
+                </section>
+            </div>
+            <mat-action-row>
+                <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                <button mat-button color="primary" (click)="nextStep()">Next</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Actions for Game</mat-panel-title>
+                <mat-panel-description>
+                    Actions for this game
+                    <mat-icon>build</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field>
+                <input matInput placeholder="Country">
+            </mat-form-field>
+
+            <mat-action-row>
+                <button mat-button color="warn" (click)="prevStep()">Previous</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+
+
+    </mat-accordion>
+</div>

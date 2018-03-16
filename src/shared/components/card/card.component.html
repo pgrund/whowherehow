@@ -1,0 +1,15 @@
+<mat-card [class.disabled]="disabled">
+    <mat-card-header [class]="card.id">
+        <mat-card-title-group>
+            <mat-card-title translate>{{ card.type }}.{{card.id}}</mat-card-title>
+        </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
+        <div #ref>
+            <ng-content></ng-content>
+        </div>
+        <pre *ngIf="ref.children.length == 0">
+      {{ card | json }}
+    </pre>
+    </mat-card-content>
+</mat-card>

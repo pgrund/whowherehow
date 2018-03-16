@@ -1,0 +1,46 @@
+<mat-accordion [multi]="true">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header fxLayout="row" fxLayoutAlign="space-between center">
+     <mat-panel-title translate>Persons</mat-panel-title>
+     <mat-panel-description>
+       <mat-icon>face</mat-icon>
+     </mat-panel-description>
+   </mat-expansion-panel-header>
+   <div fxLayout="row" fxLayoutAlign="space-around">
+       <cluedo-card *ngFor="let person of cards.persons" [card]="person" [disabled]="isDisabled(person)">
+         <!-- <mat-checkbox [disabled]="isDisabled(person)" [checked]="isDisabled(person)" (click)="toggleNote(person)"></mat-checkbox> -->
+       </cluedo-card>
+   </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+     <mat-panel-title translate>Rooms</mat-panel-title>
+     <mat-panel-description>
+       <mat-icon>room</mat-icon>
+     </mat-panel-description>
+   </mat-expansion-panel-header>
+    <div fxLayout fxLayoutAlign="space-around">
+      <cluedo-card *ngFor="let room of cards.rooms" [card]="room" [disabled]="isDisabled(room)">
+        <mat-checkbox [disabled]="isDisabled(room)" [checked]="isDisabled(room)" (click)="toggleNote(room)"></mat-checkbox>
+      </cluedo-card>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+     <mat-panel-title translate>Tools</mat-panel-title>
+     <mat-panel-description>
+       <mat-icon>pan_tool</mat-icon>
+     </mat-panel-description>
+   </mat-expansion-panel-header>
+    <div fxLayout>
+      <!-- <mat-checkbox [disabled]="isDisabled(tool)" [checked]="isDisabled(tool)" (click)="toggleNote(tool)"></mat-checkbox>
+      from notes ... -->
+      <cluedo-card *ngFor="let tool of cards.tools" [card]="tool" [disabled]="isDisabled(tool)">
+      </cluedo-card>
+    </div>
+    <mat-action-row>
+     <button mat-button color="warn" (click)="alert('suspect')" translate>Suspect</button>
+     <button mat-button color="primary" (click)="alert('accuse')" translate>Accuse</button>
+   </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>

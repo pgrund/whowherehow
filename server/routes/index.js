@@ -35,14 +35,21 @@ router.post('/players', (req, res) => {
     return res;
   }
 
-  user = storage.users.all.find( u => u.name == user.name);
-  if( user == null) {
+  let user = storage.users.all.find( u => u.name == req.body.name);
+  if( user == undefined || user == null) {
     user = {
       ...storage.users.empty,
-      name: req.body,
+      name: req.body.name,
       playerId: Math.max(...(storage.users.all.map(u => u.playerId).concat(0))) +1
     }
     storage.users.all.push(user);
+    user.privateId = user.playerId;
+  } else {
+    if (!req.cookies.privateId || req.cookies.privateId != user.privateId) {
+      res.status(403).send('invalid auth token for user');
+      return res;
+    }
+    console.log('re-login success for %s', user.name);
   }
 
 
@@ -57,14 +64,14 @@ router.post('/players', (req, res) => {
   //   expiresIn: ...
   // });
   let resUser = Object.assign({}, storage.users.hal(user));
-  //resUser.data.privateId = user.privateId;
   req.wss.sendToAllPlayers({
     type:"NOTIFY",
     data:{
       action:'[Notification] Player added',
-      payload: storage.users.hal(newUser)
+      payload: resUser.links.self
     }});
-  //res.cookie('privateId', user.privateId);
+  res.cookie('privateId', user.privateId);
+  resUser.data.privateId = user.privateId;
   res.hal(resUser);
 });
 

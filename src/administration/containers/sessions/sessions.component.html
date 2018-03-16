@@ -1,0 +1,4 @@
+<cluedo-breadcrumb-list>
+    <li>All Games</li>
+</cluedo-breadcrumb-list>
+<cluedo-session-list [sessions]="sessions$" (closeSession)="closeSession($event)" (joinSession)="joinSession($event)" (kickoutSession)="alert($event)" (createSession)="alert($event)" [me]="myself$ | async"></cluedo-session-list>

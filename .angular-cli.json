@@ -20,7 +20,8 @@
       "prefix": "cluedo",
       "styles": [
         "styles.css",
-        "styles.scss"
+        "styles.scss",
+        "../node_modules/material-design-icons-iconfont/dist/material-design-icons.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

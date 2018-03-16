@@ -1,0 +1,20 @@
+<div [formGroup]="chat">
+    <mat-form-field *ngIf="!receiverId">
+        <mat-select [placeholder]="'PlayerToReceive' | translate" formControlName="receiverId">
+            <mat-option value="" *ngIf="game">{{ 'AllOfSession' | translate }} {{game.name}}</mat-option>
+            <mat-option *ngFor="let player of players" [value]="player._links.self.href.substr(player._links.self.href.lastIndexOf('/')+1)">
+                {{ player.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="message to be sent" formControlName="message" required>
+        <mat-error *ngIf="chat.controls.message.invalid && chat.controls.message.errors.minlength">
+            name requires minimum of {{chat.controls.message.errors.minlength.requiredLength }} characters
+        </mat-error>
+        <mat-error *ngIf="chat.controls.message.invalid && chat.controls.message.errors.maxlength">
+            name requires maximum of {{chat.controls.message.errors.maxlength.requiredLength }} characters
+        </mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="accent" [disabled]="chat.invalid" (click)="send()">Send</button>
+</div>s

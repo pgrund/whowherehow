@@ -1,0 +1,46 @@
+import { Injectable } from '@angular/core';
+import { CanActivate, CanActivateChild } from '@angular/router';
+
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+
+import { tap, filter, take, switchMap, catchError, map} from 'rxjs/operators';
+
+import { State, getMyGameClosed} from '@app/reducers';
+import * as SessionActions from "@app/actions/sessions.actions";
+import * as RouterActions from "@app/actions/router.actions";
+
+@Injectable()
+export class MyGameGuard implements CanActivate, CanActivateChild {
+
+  constructor(private store:Store<State>) {}
+
+    canActivateChild(): boolean | Observable<boolean> | Promise<boolean> {
+      return this.canActivate()
+    }
+    canActivate(): Observable<boolean> {
+      console.log('checking mygame')
+      return this.checkStore().pipe(
+        switchMap(() => of(true)),
+        catchError(() => of(false))
+      );
+    }
+
+    checkStore(url: string = ''): Observable<boolean> {
+      return this.store.select(getMyGameClosed)
+      .pipe(
+        tap(closed => {
+          console.debug('mygame guard tapped loaded', closed);
+          if(!closed) {
+            let go = new RouterActions.Go({
+                path:['sessions']
+              });
+              console.debug('myGame redirects', url);
+              this.store.dispatch(go);
+          }
+        }),
+        take(1)
+      );
+    }
+}

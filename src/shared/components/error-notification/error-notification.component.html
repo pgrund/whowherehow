@@ -1,0 +1,11 @@
+<button mat-mini-fab color="warn" class="close">
+ <mat-icon aria-label=acknowledge (click)="dismiss()">close</mat-icon>
+</button>
+
+<header fxLayout="row" fxLayoutAlign="space-between center" color="error">
+  <mat-icon aria-label=warning color="warn" flexAlign="center" fxFlexOffset="5" fxFlex="10">warning</mat-icon>
+  <p fxFlexOffset="2" flexAlign="center" fxFlex>{{ error.error | words : 10}}</p>
+</header>
+<div fxLayout="row">
+  <p fxFlexOffset="10" fxFlex>{{ error.message}}</p>
+</div>

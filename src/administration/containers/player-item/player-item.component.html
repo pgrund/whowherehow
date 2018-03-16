@@ -1,0 +1,5 @@
+<cluedo-breadcrumb-list>
+    <li><a routerLink="/players">All Players</a></li>
+    <li>{{(player$ | async).name}}</li>
+</cluedo-breadcrumb-list>
+<cluedo-player-detail [player]="player$ | async" [me]="myself$ | async"></cluedo-player-detail>

@@ -1,0 +1,10 @@
+mat-icon.mat-icon {
+  vertical-align: middle;
+}
+span.me, span.time {
+  font-style: italic;
+}
+
+div.item {
+  max-width: 500px;
+}

@@ -1,0 +1,8 @@
+<cluedo-chat-send [game]="$game | async" [players]="players$ | async" (sendChat)="onSend($event)"></cluedo-chat-send>
+<div>
+    <ul *ngIf="messages$ | async as messages">
+        <li *ngFor="let msg of messages">
+            <cluedo-chat-item [debug]="true" [msg]="msg" [me]="me$ | async"></cluedo-chat-item>
+        </li>
+    </ul>
+</div>
