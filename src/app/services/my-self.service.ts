@@ -1,12 +1,13 @@
-import { Injectable } from "@angular/core";
-import { Store } from "@ngrx/store";
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import { Observable, Subscription } from "rxjs";
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-import { State, getMyInfo } from "../store";
-import { HalLinks, HalLink } from "@app/models/hal";
-import { Player } from "@app/models/player";
-import { Session } from "@app/models/session";
+import { AuthState, getMyInfo } from '@auth/store';
+import { HalLinks, HalLink } from '@shared/models/hal';
+import { Player } from '@shared/models/player';
+import { Session } from '@shared/models/session';
 
 @Injectable()
 export class MySelfService {
@@ -14,10 +15,10 @@ export class MySelfService {
   public myGame: Session;
   private subscription: Subscription;
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<AuthState>) {
     this.subscription = this.store.select(getMyInfo).subscribe(info => {
-      this.mySelf = info; //.me;
-      //this.myGame = info.game;
+      this.mySelf = info; // .me;
+      // this.myGame = info.game;
     });
   }
 
@@ -36,13 +37,13 @@ export class MySelfService {
   }
 
   isDirectorOfGame(sessionLinks: HalLinks, playerLink: HalLink) {
-    return sessionLinks.admin.href == playerLink.href;
+    return sessionLinks.admin.href === playerLink.href;
   }
   isPlayerOfGame(sessionLinks: HalLinks) {
     return (
       this.mySelf &&
       this.mySelf._links.game &&
-      sessionLinks.self.href == this.mySelf._links.game.href
+      sessionLinks.self.href === this.mySelf._links.game.href
     );
   }
   isPlayerOfAnyGame() {
@@ -63,15 +64,15 @@ export class MySelfService {
       this.mySelf != null &&
       playerLinks.game != null &&
       this.mySelf._links.game != null &&
-      this.mySelf._links.game.href == playerLinks.game.href
+      this.mySelf._links.game.href === playerLinks.game.href
     );
   }
   isMe(name: string) {
-    return this.mySelf && name == this.mySelf.name;
+    return this.mySelf && name === this.mySelf.name;
   }
   isMyGame(game: HalLink) {
     return (
-      this.isPlayerOfAnyGame() && this.mySelf._links.game.href == game.href
+      this.isPlayerOfAnyGame() && this.mySelf._links.game.href === game.href
     );
   }
 }

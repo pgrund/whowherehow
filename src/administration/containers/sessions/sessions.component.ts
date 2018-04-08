@@ -1,18 +1,19 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
 
-import * as fromStore from "../../store";
-import * as fromRoot from "@app/store";
+import * as fromStore from '../../store';
+import * as fromRoot from '@app/store';
+import * as fromAuth from '@auth/store';
 
-import { Session } from "@app/models/session";
-import { Player } from "@app/models/player";
+import { Session } from '@shared/models/session';
+import { Player } from '@shared/models/player';
 
 @Component({
-  selector: "cluedo-sessions",
-  templateUrl: "./sessions.component.html"
+  selector: 'cluedo-sessions',
+  templateUrl: './sessions.component.html'
 })
 export class SessionsComponent {
   public sessions$: Observable<Session[]>;
@@ -20,7 +21,7 @@ export class SessionsComponent {
 
   constructor(private store: Store<fromRoot.State>) {
     this.sessions$ = this.store.select(fromStore.getAllSessions);
-    this.myself$ = this.store.select(fromRoot.getMyInfo);
+    this.myself$ = this.store.select(fromAuth.getMyInfo);
   }
 
   createSession(name: string) {

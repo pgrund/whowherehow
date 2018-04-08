@@ -1,10 +1,12 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from "@ngrx/entity";
-import * as notify from "../actions/notification.actions";
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import * as notify from '../actions/notification.actions';
 
-import { Chat } from "@app/models/chat";
-import { HalLink } from "@app/models/hal";
+import { Chat } from '@app/models/chat';
+import { HalLink } from '@shared/models/hal';
 
-export interface ErrorState extends EntityState<Error> {}
+export interface ErrorState extends EntityState<Error> {
+  // additonal entities state properties
+}
 export interface MessageState extends EntityState<Chat> {}
 export interface InfoState extends EntityState<string> {}
 
@@ -24,16 +26,16 @@ export const initialState: NotificationState = {
     ids: [1, 2],
     entities: {
       1: {
-        message: "from 'spieler1' to 'spieler1'",
+        message: 'from "spieler1" to "spieler1"',
         receiverId: 1,
-        sender: "spieler1",
-        time: new Date(Date.parse("2018-01-16T11:40:47.428Z"))
+        sender: 'spieler1',
+        time: new Date(Date.parse('2018-01-16T11:40:47.428Z'))
       },
       2: {
-        message: "from 'spieler2' to game",
+        message: 'from "spieler2" to game',
         receiverId: null,
-        sender: "spieler2",
-        time: new Date(Date.parse("2018-01-16T11:40:35.111Z"))
+        sender: 'spieler2',
+        time: new Date(Date.parse('2018-01-16T11:40:35.111Z'))
       }
     }
   }),
@@ -44,7 +46,6 @@ export function reducer(
   state = initialState,
   action: notify.NotificationActions
 ): NotificationState {
-  console.debug("NOTIFICATION", action);
   switch (action.type) {
     case notify.ERROR_ADD: {
       const errors = errorAdapter.addOne(action.payload, state.errors);

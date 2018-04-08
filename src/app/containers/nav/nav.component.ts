@@ -1,37 +1,40 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Store } from "@ngrx/store";
-import * as fromStore from "../../store";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import { TranslateService } from "@ngx-translate/core";
+// import { State } from '../../store';
+import * as fromStore from '@auth/store';
 
-import { Observable } from "rxjs";
+import { TranslateService } from '@ngx-translate/core';
 
-import { LogoutAction } from "@app/store/actions/login.actions";
+import { Observable } from 'rxjs/Observable';
 
-import { MySelfService } from "@app/services/my-self.service";
+import { LogoutAction } from '@auth/store';
 
-import { environment } from "@env/environment";
-import { Player } from "@app/models/player";
+import { MySelfService } from '@app/services/my-self.service';
+
+import { environment } from '@env/environment';
+import { Player } from '@shared/models/player';
 
 @Component({
-  selector: "cluedo-nav",
-  templateUrl: "./nav.component.html",
-  styleUrls: ["./nav.component.css"]
+  selector: 'cluedo-nav',
+  templateUrl: './nav.component.html',
+  styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
-  public returnUrl = "/";
+  public returnUrl = '/';
   public debug: boolean;
 
   public myself$: Observable<Player>;
   public isAuthenticated$: Observable<boolean>;
 
   constructor(
-    private store: Store<fromStore.State>,
+    private store: Store<fromStore.AuthState>,
     public myService: MySelfService,
     private translation: TranslateService
   ) {
+    console.log(store);
     this.debug = !environment.production;
-    this.translation.setDefaultLang("en");
+    this.translation.setDefaultLang('en');
 
     this.myself$ = this.store.select(fromStore.getMyInfo);
     this.isAuthenticated$ = this.store.select(fromStore.isAuthenticated);

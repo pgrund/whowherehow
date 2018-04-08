@@ -1,46 +1,47 @@
 {
-    "NAV": {
-        "AboutMe": "Über Mich",
-        "Games": "Spiele",
-        "Players": "Spieler",
-        "MyGame": "Mein Spiel",
-        "Administration": "Verwaltung",
-        "Chat": "Chat",
-        "Login": "Einloggen",
-        "Logout": "Ausloggen",
-        "Title": "Cluedo NEU",
-        "ChangeLanguage": "Sprache ändern"
-    },
-    "PERSON": {
-        "BARONIN_VON_PORZ": "Baronin von Porz",
-        "FRAEULEIN_GLORIA": "Fräulein Gloria",
-        "FRAU_WEISS": "Frau Weiß",
-        "OBERST_VON_GATOW": "Oberst von Gatow",
-        "PROFESSOR_BLOOM": "Professor Bloom",
-        "REVEREND_GRUEN": "Reverend Grün",
-        "Title": "Personen"
-    },
-    "ROOM": {
-        "ARBEITSZIMMER": "Arbeitszimmer",
-        "BIBLIOTHEK": "Bibliothek",
-        "BILLARDZIMMER": "Billiardzimmer",
-        "HALLE": "Halle",
-        "KUECHE": "Küche",
-        "MUSIKZIMMER": "Musikzimmer",
-        "SALON": "Salon",
-        "SPEISEZIMMER": "Speisezimmer",
-        "WINTERGARTEN": "Wintergarten",
-        "Title": "Räume"
-    },
-    "TOOL": {
-        "DOLCH": "Dolch",
-        "HEIZUNGSROHR": "Heizungsrohr",
-        "LEUCHTER": "Leuchter",
-        "PISTOLE": "Pistole",
-        "ROHRZANGE": "Rohrzange",
-        "SEIL": "Seil",
-        "Title": "Werkzeuge"
-    },
-    "AllOfSession": "an alle Spieler von {{game}}",
-    "PlayerToReceive": "an folgenden Spieler"
+  "NAV": {
+    "AboutMe": "Über Mich",
+    "Games": "Spiele",
+    "Players": "Spieler",
+    "MyGame": "Mein Spiel",
+    "Administration": "Verwaltung",
+    "Chat": "Chat",
+    "Login": "Einloggen",
+    "Logout": "Ausloggen",
+    "Title": "Cluedo NEU",
+    "ChangeLanguage": "Sprache ändern"
+  },
+  "PERSON": {
+    "BARONIN_VON_PORZ": "Baronin von Porz",
+    "FRAEULEIN_GLORIA": "Fräulein Gloria",
+    "FRAU_WEISS": "Frau Weiß",
+    "OBERST_VON_GATOW": "Oberst von Gatow",
+    "PROFESSOR_BLOOM": "Professor Bloom",
+    "REVEREND_GRUEN": "Reverend Grün",
+    "Title": "Personen"
+  },
+  "ROOM": {
+    "ARBEITSZIMMER": "Arbeitszimmer",
+    "BIBLIOTHEK": "Bibliothek",
+    "BILLARDZIMMER": "Billiardzimmer",
+    "HALLE": "Halle",
+    "KUECHE": "Küche",
+    "MUSIKZIMMER": "Musikzimmer",
+    "SALON": "Salon",
+    "SPEISEZIMMER": "Speisezimmer",
+    "WINTERGARTEN": "Wintergarten",
+    "Title": "Räume"
+  },
+  "TOOL": {
+    "DOLCH": "Dolch",
+    "HEIZUNGSROHR": "Heizungsrohr",
+    "LEUCHTER": "Leuchter",
+    "PISTOLE": "Pistole",
+    "ROHRZANGE": "Rohrzange",
+    "SEIL": "Seil",
+    "Title": "Werkzeuge"
+  },
+  "AllOfSession": "an alle Spieler von {{game}}",
+  "PlayerToReceive": "an folgenden Spieler",
+  "MessageToSend": "folgende Nachricht ..."
 }

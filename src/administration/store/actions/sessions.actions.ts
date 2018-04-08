@@ -1,28 +1,28 @@
-import { Action } from "@ngrx/store";
+import { Action } from '@ngrx/store';
 
-import { Session } from "@app/models/session";
-import { Player } from "@app/models/player";
-import { HalLink } from "@app/models/hal";
+import { Session } from '@shared/models/session';
+import { Player } from '@shared/models/player';
+import { HalLink } from '@shared/models/hal';
 
-export const LOAD_SESSIONS = "[Sessions] Load All";
-export const LOAD_SESSIONS_SUCCESS = "[Sessions] Load All Success";
-export const LOAD_SESSIONS_FAIL = "[Sessions] Load Fail";
-export const JOIN_SESSION = "[Sessions] Join";
-export const JOIN_SESSION_SUCCESS = "[Sessions] Join Success";
-export const INVITE_SESSION = "[Sessions] Invite";
-export const INVITE_SESSION_SUCCESS = "[Sessions] Invite Success";
-export const KICK_OUT_SESSION = "[Sessions] Kick Out Player";
-export const KICK_OUT_SESSION_SUCCESS = "[Sessions] Kick Out Player Success";
-export const APPROVE_SESSION = "[Sessions] Approve Player";
-export const APPROVE_SESSION_SUCCESS = "[Sessions] Approve Player Success";
-export const CREATE_SESSION = "[Sessions] Create New Session";
-export const CREATE_SESSION_SUCCESS = "[Sessions] Create Session Success";
-export const CLOSE_SESSION = "[Sessions] Close Session";
-export const CLOSE_SESSION_SUCCESS = "[Sessions] Close Session Success";
-export const ACTIVE_SESSION = "[Sessions] Active Session";
-export const SELECT_SESSION = "[Sessions] Select Session";
-export const UPDATE_SESSION = "[Sessions] Update Session";
-export const ACTIVE_SESSION_SUCCESS = "[Sessions] Active Session Success";
+export const LOAD_SESSIONS = '[Sessions] Load All';
+export const LOAD_SESSIONS_SUCCESS = '[Sessions] Load All Success';
+export const LOAD_SESSIONS_FAIL = '[Sessions] Load Fail';
+export const JOIN_SESSION = '[Sessions] Join';
+export const JOIN_SESSION_SUCCESS = '[Sessions] Join Success';
+export const INVITE_SESSION = '[Sessions] Invite';
+export const INVITE_SESSION_SUCCESS = '[Sessions] Invite Success';
+export const KICK_OUT_SESSION = '[Sessions] Kick Out Player';
+export const KICK_OUT_SESSION_SUCCESS = '[Sessions] Kick Out Player Success';
+export const APPROVE_SESSION = '[Sessions] Approve Player';
+export const APPROVE_SESSION_SUCCESS = '[Sessions] Approve Player Success';
+export const CREATE_SESSION = '[Sessions] Create New Session';
+export const CREATE_SESSION_SUCCESS = '[Sessions] Create Session Success';
+export const CLOSE_SESSION = '[Sessions] Close Session';
+export const CLOSE_SESSION_SUCCESS = '[Sessions] Close Session Success';
+export const ACTIVE_SESSION = '[Sessions] Active Session';
+export const SELECT_SESSION = '[Sessions] Select Session';
+export const UPDATE_SESSION = '[Sessions] Update Session';
+export const ACTIVE_SESSION_SUCCESS = '[Sessions] Active Session Success';
 /**
  * Load Sessions Actions
  */
@@ -40,7 +40,7 @@ export class LoadSessionsFailAction implements Action {
   readonly type = LOAD_SESSIONS_FAIL;
 
   constructor(public payload: Error) {
-    this.payload.message = "[SESSION] " + this.payload.message;
+    this.payload.message = '[SESSION] ' + this.payload.message;
   }
 }
 

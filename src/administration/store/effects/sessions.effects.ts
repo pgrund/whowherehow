@@ -1,17 +1,18 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Actions, Effect } from "@ngrx/effects";
-import { Store } from "@ngrx/store";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 
-import * as fromRoot from "@app/store";
+import * as fromRoot from '@app/store';
+import * as fromAuth from '@auth/store';
 
-import { Observable } from "rxjs/Observable";
-import { switchMap, map, catchError, withLatestFrom } from "rxjs/operators";
+import { Observable } from 'rxjs/Observable';
+import { switchMap, map, catchError, withLatestFrom } from 'rxjs/operators';
 
-import * as fromActions from "../actions";
+import * as fromActions from '../actions';
 
-import { Session } from "@app/models/session";
-import { Player } from "@app/models/player";
+import { Session } from '@shared/models/session';
+import { Player } from '@shared/models/player';
 
 @Injectable()
 export class SessionsEffects {
@@ -24,15 +25,15 @@ export class SessionsEffects {
   @Effect()
   join$ = this.actions$.ofType(fromActions.JOIN_SESSION).pipe(
     map((action: fromActions.JoinSessionAction) => {
-      console.log("==>>> POST %s (%s)", action.payload, document.cookie);
+      console.log('==>>> POST %s (%s)', action.payload, document.cookie);
       return action.payload;
     }),
-    withLatestFrom(this.store.select(fromRoot.getMyInfo)),
+    withLatestFrom(this.store.select(fromAuth.getMyInfo)),
     switchMap(([url, me]) => {
       console.log(url, me);
       return (
         this.http
-          .post("/api" + url, "")
+          .post('/api' + url, '')
           // If successful, dispatch success action with result
           .flatMap((data: Player) => [
             new fromActions.JoinSessionSuccessAction(data),
@@ -50,15 +51,15 @@ export class SessionsEffects {
   @Effect()
   invite$ = this.actions$.ofType(fromActions.INVITE_SESSION).pipe(
     map((action: fromActions.InviteSessionAction) => {
-      console.log("==>>> PUT %s (%s)", action.payload, document.cookie);
+      console.log('==>>> PUT %s (%s)', action.payload, document.cookie);
       return action.payload;
     }),
-    withLatestFrom(this.store.select(fromRoot.getMyInfo)),
+    withLatestFrom(this.store.select(fromAuth.getMyInfo)),
     switchMap(([player, me]) => {
       console.log(player, me);
       return (
         this.http
-          .put(`/api${me._links.game.href}/${player}`, "")
+          .put(`/api${me._links.game.href}/${player}`, '')
           // If successful, dispatch success action with result
           .flatMap((data: Player) => [
             new fromActions.InviteSessionSuccessAction(data),
@@ -115,7 +116,7 @@ export class SessionsEffects {
   get$ = this.actions$.ofType(fromActions.LOAD_SESSIONS).pipe(
     switchMap(payload =>
       this.http
-        .get("/api/sessions")
+        .get('/api/sessions')
         // If successful, dispatch success action with result
         .map(
           (data: any) =>
@@ -134,7 +135,7 @@ export class SessionsEffects {
     map((action: fromActions.CreateSessionAction) => action.payload),
     switchMap((name: string) =>
       this.http
-        .post("/api/sessions", { sessionName: name })
+        .post('/api/sessions', { sessionName: name })
         // If successful, dispatch success action with result
         .map((data: any) => {
           return new fromActions.UpdateSessionAction(<Session>data);
@@ -149,12 +150,12 @@ export class SessionsEffects {
   @Effect()
   close$ = this.actions$.ofType(fromActions.CLOSE_SESSION).pipe(
     map((action: fromActions.CloseSessionAction) => action.payload),
-    withLatestFrom(this.store.select(fromRoot.getMyInfo)),
+    withLatestFrom(this.store.select(fromAuth.getMyInfo)),
     switchMap(([closeLink, me]) => {
       console.log(closeLink, me);
       return (
         this.http
-          .put("/api" + closeLink, null)
+          .put('/api' + closeLink, null)
           // If successful, dispatch success action with result
           .map((data: any) => {
             return new fromActions.UpdateSessionAction(<Session>data);

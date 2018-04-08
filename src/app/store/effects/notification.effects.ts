@@ -1,19 +1,20 @@
-import { Injectable } from "@angular/core";
-import { Actions, Effect } from "@ngrx/effects";
+import { Injectable } from '@angular/core';
+import { Actions, Effect } from '@ngrx/effects';
 
-import { HttpErrorResponse } from "@angular/common/http";
-import { Observable, Subject } from "rxjs";
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
-import "rxjs/add/operator/switchMap";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/catch";
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
-import { WebSocketService } from "@app/services";
+import { WebSocketService } from '@app/services';
 
-import * as fromAdmin from "@administration/store";
-import * as fromAction from "../actions";
+import * as fromAdmin from '@administration/store';
+import * as fromAction from '../actions';
 
-import { Chat } from "@app/models/chat";
+import { Chat } from '@app/models/chat';
 
 @Injectable()
 export class NotificationEffects {
@@ -24,20 +25,19 @@ export class NotificationEffects {
     .ofType(
       fromAdmin.LOAD_PLAYERS_FAIL,
       fromAdmin.LOAD_SESSIONS_FAIL,
-      fromAction.SEND_MESSAGE_FAILURE,
-      fromAction.LOGIN_FAILURE
+      fromAction.SEND_MESSAGE_FAILURE
     )
     .flatMap((action: any) => {
-      let res: any[] = [new fromAction.AddErrorAction(action.payload)];
+      const res: any[] = [new fromAction.AddErrorAction(action.payload)];
       if (
         action.payload instanceof HttpErrorResponse &&
         [401, 403].indexOf(action.payload.status) > -1
       ) {
-        console.warn("need to logout", action.payload);
-        //res.push(new fromRoot.LogoutAction());
+        console.warn('need to logout', action.payload);
+        // res.push(new fromRoot.LogoutAction());
         res.push(
           new fromAction.Go({
-            path: ["/login"],
+            path: ['/login'],
             extras: { replaceUrl: true }
           })
         );
@@ -54,7 +54,7 @@ export class NotificationEffects {
         this.wsService.sendMessage(message);
         return new fromAction.SendSuccessAction(message);
       } catch (err) {
-        console.warn("cannot send no open connection");
+        console.warn('cannot send no open connection');
         return new fromAction.SendFailureAction(err);
       }
     });

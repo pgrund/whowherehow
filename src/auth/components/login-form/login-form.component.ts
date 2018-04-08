@@ -13,8 +13,8 @@ import {
   Validators
 } from "@angular/forms";
 
-import { Player } from "@app/models/player";
-import { Login } from "@app/models/login";
+import { Player } from "@shared/models/player";
+import { Login } from "../..//models/login";
 
 import { environment } from "@env/environment";
 

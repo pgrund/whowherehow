@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input } from '@angular/core';
 
-import { Card } from "@app/models/card";
+import { Card } from '@shared/models/card';
 
 @Component({
-  selector: "cluedo-notes",
-  templateUrl: "./notes.component.html",
-  styleUrls: ["./notes.component.css"]
+  selector: 'cluedo-notes',
+  templateUrl: './notes.component.html',
+  styleUrls: ['./notes.component.css']
 })
 export class NotesComponent implements OnInit {
   @Input() cards: Card[] = [];

@@ -1,10 +1,10 @@
-import { createSelector } from "@ngrx/store";
+import { createSelector } from '@ngrx/store';
 
-import * as fromRoot from "@app/store";
-import * as fromFeature from "../reducers";
-import * as fromSession from "../reducers/sessions.reducer";
+import * as fromRoot from '@app/store';
+import * as fromFeature from '../reducers';
+import * as fromSession from '../reducers/sessions.reducer';
 
-import { Session } from "@app/models/session";
+import { Session } from '@shared/models/session';
 
 export const getSessionEntities = createSelector(
   fromFeature.getSessionState,
@@ -16,7 +16,7 @@ export const getSelectedSession = createSelector(
   fromRoot.getRouterState,
   (entities, router): Session => {
     return (
-      router.state && entities["/sessions/" + router.state.params.sessionId]
+      router.state && entities['/sessions/' + router.state.params.sessionId]
     );
   }
 );

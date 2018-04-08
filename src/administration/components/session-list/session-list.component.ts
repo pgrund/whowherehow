@@ -1,17 +1,19 @@
-import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
-import { Store } from "@ngrx/store";
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import { Observable, Subscription, BehaviorSubject } from "rxjs";
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { DataSource } from "@angular/cdk/collections";
+import { DataSource } from '@angular/cdk/collections';
 
-import { Session, SessionState } from "@app/models/session";
-import { Player } from "@app/models/player";
-import { HalLinks, HalLink } from "@app/models/hal";
+import { Session, SessionState } from '@shared/models/session';
+import { Player } from '@shared/models/player';
+import { HalLinks, HalLink } from '@shared/models/hal';
 
-import * as fromStore from "../../store";
+import * as fromStore from '../../store';
 
-import { environment } from "@env/environment";
+import { environment } from '@env/environment';
 
 class DisplaySession extends Session {
   state: SessionState;
@@ -30,15 +32,15 @@ class DisplaySession extends Session {
     this.state = session._links.close ? SessionState.OPEN : SessionState.CLOSED;
 
     Object.keys(session._links)
-      .filter(key => ["self", "turn", "start"].indexOf(key) > -1)
+      .filter(key => ['self', 'turn', 'start'].indexOf(key) > -1)
       .forEach(key => (this.actions[key] = session._links[key]));
   }
 }
 
 @Component({
-  selector: "cluedo-session-list",
-  templateUrl: "./session-list.component.html",
-  styleUrls: ["./session-list.component.css"]
+  selector: 'cluedo-session-list',
+  templateUrl: './session-list.component.html',
+  styleUrls: ['./session-list.component.css']
 })
 export class SessionListComponent implements OnInit {
   @Input() sessions: Observable<Session[]> = Observable.of([]);
@@ -53,7 +55,7 @@ export class SessionListComponent implements OnInit {
   }>();
   @Output() createSession = new EventEmitter<string>();
 
-  public displayedColumns = ["sessionName", "playerLinks", "_links", "actions"];
+  public displayedColumns = ['sessionName', 'playerLinks', '_links', 'actions'];
   public dataSource: SessionListDataSource;
   public debug = !environment.production;
 
@@ -68,11 +70,11 @@ export class SessionListComponent implements OnInit {
   }
 
   partOfGame(session: Session, link: HalLink = this.me._links.self): boolean {
-    return session._links.players.find(p => p.href == link.href) != null;
+    return session._links.players.find(p => p.href === link.href) != null;
   }
 
   amAdmin(session: Session, playerLink: HalLink = this.me._links.self) {
-    return playerLink.href == session._links.admin.href;
+    return playerLink.href === session._links.admin.href;
   }
 
   test(session: Session) {
@@ -86,7 +88,7 @@ export class SessionListComponent implements OnInit {
 }
 
 export class SessionListDataSource extends DataSource<DisplaySession> {
-  filterChange = new BehaviorSubject("");
+  filterChange = new BehaviorSubject('');
   constructor(private examples$: Observable<Session[]>) {
     super();
   }

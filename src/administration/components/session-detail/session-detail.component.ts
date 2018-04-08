@@ -5,23 +5,25 @@ import {
   Input,
   EventEmitter,
   Output
-} from "@angular/core";
-import { Store } from "@ngrx/store";
+} from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import * as fromStore from "../../store";
+import * as fromStore from '../../store';
 
-import { Observable, Subscription } from "rxjs";
-import "rxjs/add/operator/map";
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-import { MySelfService } from "@app/services/my-self.service";
-import { Session } from "@app/models/session";
-import { Player } from "@app/models/player";
-import { HalLink } from "@app/models/hal";
+import 'rxjs/add/operator/map';
+
+import { MySelfService } from '@app/services/my-self.service';
+import { Session } from '@shared/models/session';
+import { Player } from '@shared/models/player';
+import { HalLink } from '@shared/models/hal';
 
 @Component({
-  selector: "cluedo-session-detail",
-  templateUrl: "./session-detail.component.html",
-  styleUrls: ["./session-detail.component.scss"],
+  selector: 'cluedo-session-detail',
+  templateUrl: './session-detail.component.html',
+  styleUrls: ['./session-detail.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class SessionDetailComponent {
@@ -30,18 +32,19 @@ export class SessionDetailComponent {
 
   @Output() closeSession = new EventEmitter<Session>();
 
+  step = 1;
+
   isMe(player: HalLink) {
-    return this.me && this.me.name == player.name;
+    return this.me && this.me.name === player.name;
   }
 
   iAmAdminOfGame(gameLink: HalLink) {
     return (
       this.me &&
       this.me._links.admin &&
-      this.me._links.admin.href == gameLink.href
+      this.me._links.admin.href === gameLink.href
     );
   }
-  step = 1;
 
   setStep(index: number) {
     this.step = index;

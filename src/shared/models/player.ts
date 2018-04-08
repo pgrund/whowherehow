@@ -1,20 +1,19 @@
-import { PersonCard, Card } from "@app/models/card";
-import { Hal, HalLinks, HalLink } from "@app/models/hal";
+import { PersonCard, Card } from './card';
+import { Hal, HalLinks, HalLink } from './hal';
 
 export enum PlayerState {
   PLAYER,
   DIRECTOR,
   OPEN
 }
-export type Position = {
-  x: number;
-  y: number;
-};
 export class Player extends Hal {
   name: string;
   privateId?: number;
   teamId?: PersonCard;
-  position?: Position;
+  position?: {
+    x: number;
+    y: number;
+  };
   currentDice?: number;
   numberOfCards?: number;
   cards?: Card[];

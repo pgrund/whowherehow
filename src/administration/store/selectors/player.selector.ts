@@ -1,10 +1,10 @@
-import { createSelector } from "@ngrx/store";
+import { createSelector } from '@ngrx/store';
 
-import * as fromRoot from "@app/store";
-import * as fromFeature from "../reducers";
-import * as fromPlayer from "../reducers/player.reducer";
+import * as fromRoot from '@app/store';
+import * as fromFeature from '../reducers';
+import * as fromPlayer from '../reducers/player.reducer';
 
-import { Player } from "@app/models/player";
+import { Player } from '@shared/models/player';
 
 export const getPlayerEntities = createSelector(
   fromFeature.getPlayerState,
@@ -15,7 +15,7 @@ export const getSelectedPlayer = createSelector(
   getPlayerEntities,
   fromRoot.getRouterState,
   (entities, router): Player => {
-    return router.state && entities["/players/" + router.state.params.playerId];
+    return router.state && entities['/players/' + router.state.params.playerId];
   }
 );
 

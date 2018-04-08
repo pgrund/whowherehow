@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { Observable, Subscription } from "rxjs";
+
+import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
 
 import { Store } from "@ngrx/store";
 
@@ -8,8 +10,8 @@ import * as fromAdmin from "@administration/store";
 import * as fromStore from "../../store";
 
 import { Chat } from "@app/models/chat";
-import { Player } from "@app/models/player";
-import { Session } from "@app/models/session";
+import { Player } from "@shared/models/player";
+import { Session } from "@shared/models/session";
 
 @Component({
   selector: "cluedo-chat",
@@ -38,7 +40,7 @@ export class ChatComponent {
     //   this.messages = msg;
     // })
     this.players$ = this.store.select(fromAdmin.getAllPlayers);
-    //this.game$ = this.store.select(fromStore.get);
+    // this.game$ = this.store.select(fromStore.get);
   }
 
   onSend(message: Chat) {

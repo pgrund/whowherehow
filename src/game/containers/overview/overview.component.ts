@@ -1,24 +1,24 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormGroup,
   FormBuilder,
   Validators
-} from "@angular/forms";
+} from '@angular/forms';
 
-import { Observable } from "rxjs";
-import "rxjs/add/operator/map";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
-import { Store } from "@ngrx/store";
-import { State, getMyInfo } from "@app/store";
+import { Store } from '@ngrx/store';
+import { AuthState, getMyInfo } from '@auth/store';
 
-import { Session } from "@app/models/session";
-import { Player } from "@app/models/player";
+import { Session } from '@shared/models/session';
+import { Player } from '@shared/models/player';
 
 @Component({
-  selector: "cluedo-overview",
-  templateUrl: "./overview.component.html",
-  styleUrls: ["./overview.component.css"]
+  selector: 'cluedo-overview',
+  templateUrl: './overview.component.html',
+  styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
   formGroup: FormGroup;
@@ -31,18 +31,21 @@ export class OverviewComponent implements OnInit {
   info$: Observable<Player>;
 
   steps = [
-    { label: "Confirm your name", content: "Last name, First name." },
-    { label: "Confirm your contact information", content: "123-456-7890" },
-    { label: "Confirm your address", content: "1600 Amphitheater Pkwy MTV" },
-    { label: "You are now done", content: "Finished!" }
+    { label: 'Confirm your name', content: 'Last name, First name.' },
+    { label: 'Confirm your contact information', content: '123-456-7890' },
+    { label: 'Confirm your address', content: '1600 Amphitheater Pkwy MTV' },
+    { label: 'You are now done', content: 'Finished!' }
   ];
 
   /** Returns a FormArray with the name 'formArray'. */
   get formArray(): AbstractControl | null {
-    return this.formGroup.get("formArray");
+    return this.formGroup.get('formArray');
   }
 
-  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
+  constructor(
+    private _formBuilder: FormBuilder,
+    private store: Store<AuthState>
+  ) {
     this.info$ = this.store.select(getMyInfo);
   }
 
@@ -56,22 +59,22 @@ export class OverviewComponent implements OnInit {
     this.formGroup = this._formBuilder.group({
       formArray: this._formBuilder.array([
         this._formBuilder.group({
-          firstNameFormCtrl: ["", Validators.required],
-          lastNameFormCtrl: ["", Validators.required]
+          firstNameFormCtrl: ['', Validators.required],
+          lastNameFormCtrl: ['', Validators.required]
         }),
         this._formBuilder.group({
-          emailFormCtrl: ["", Validators.email]
+          emailFormCtrl: ['', Validators.email]
         })
       ])
     });
 
     this.nameFormGroup = this._formBuilder.group({
-      firstNameCtrl: ["", Validators.required],
-      lastNameCtrl: ["", Validators.required]
+      firstNameCtrl: ['', Validators.required],
+      lastNameCtrl: ['', Validators.required]
     });
 
     this.emailFormGroup = this._formBuilder.group({
-      emailCtrl: ["", Validators.email]
+      emailCtrl: ['', Validators.email]
     });
   }
 }

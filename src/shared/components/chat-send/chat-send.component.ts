@@ -1,16 +1,17 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { Chat } from "@app/models/chat";
-import { Player } from "@app/models/player";
-import { Session } from "@app/models/session";
+import { Chat } from '@app/models/chat';
+import { Player } from '@shared/models/player';
+import { Session } from '@shared/models/session';
 
 @Component({
-  selector: "cluedo-chat-send",
-  templateUrl: "./chat-send.component.html",
-  styleUrls: ["./chat-send.component.css"]
+  selector: 'cluedo-chat-send',
+  templateUrl: './chat-send.component.html',
+  styleUrls: ['./chat-send.component.css']
 })
-export class ChatSendComponent {
+export class ChatSendComponent implements OnInit {
   @Input() receiverId: number = null;
   @Input() players: Player[] = [];
   @Input() game: Session = null;
@@ -22,7 +23,7 @@ export class ChatSendComponent {
 
   ngOnInit() {
     this.chat = new FormGroup({
-      message: new FormControl("", [
+      message: new FormControl('', [
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(75)

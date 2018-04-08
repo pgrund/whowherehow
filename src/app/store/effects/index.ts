@@ -1,13 +1,7 @@
-import { RouterEffects } from "./router.effects";
-import { LoginEffects } from "./login.effects";
-import { NotificationEffects } from "./notification.effects";
+import { RouterEffects } from './router.effects';
+import { NotificationEffects } from './notification.effects';
 
-export const effects: any[] = [
-  RouterEffects,
-  LoginEffects,
-  NotificationEffects
-];
+export const effects: any[] = [RouterEffects, NotificationEffects];
 
-export * from "./router.effects";
-export * from "./login.effects";
-export * from "./notification.effects";
+export * from './router.effects';
+export * from './notification.effects';

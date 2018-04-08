@@ -1,0 +1,7 @@
+<mat-chip-list>
+  <mat-chip-list>
+    <!-- structural links -->
+    <mat-chip [routerLink]="element._links.self.href" [selected]="partOfGame(element)" title="about">about</mat-chip>
+    <mat-chip [routerLink]="element._links.admin.href" color="primary" [selected]="amAdmin(element)" title="administrator of this session">director</mat-chip>
+  </mat-chip-list>
+</mat-chip-list>

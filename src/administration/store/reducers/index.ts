@@ -2,10 +2,10 @@ import {
   ActionReducerMap,
   createFeatureSelector,
   createSelector
-} from "@ngrx/store";
+} from '@ngrx/store';
 
-import * as fromPlayer from "./player.reducer";
-import * as fromSession from "./sessions.reducer";
+import * as fromPlayer from './player.reducer';
+import * as fromSession from './sessions.reducer';
 
 export interface AdministrationState {
   players: fromPlayer.PlayerState;
@@ -19,7 +19,7 @@ export const reducers: ActionReducerMap<AdministrationState> = {
 
 export const getAdministrationState = createFeatureSelector<
   AdministrationState
->("admin");
+>('admin');
 
 export const getPlayerState = createSelector(
   getAdministrationState,

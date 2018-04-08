@@ -1,5 +1,5 @@
-import * as sessions from "../actions/sessions.actions";
-import { Session } from "@app/models/session";
+import * as sessions from '../actions/sessions.actions';
+import { Session } from '@shared/models/session';
 
 export interface SessionState {
   entities: { [id: string]: Session };
@@ -19,7 +19,6 @@ export function reducer(
   state = initialState,
   action: sessions.SessionActions
 ): SessionState {
-  console.debug("SESSION", action);
   switch (action.type) {
     case sessions.LOAD_SESSIONS:
     case sessions.KICK_OUT_SESSION:
@@ -32,11 +31,11 @@ export function reducer(
       };
     }
     case sessions.LOAD_SESSIONS_SUCCESS: {
-      const sessions = action.payload;
-      const entities = sessions.reduce(
-        (entities: { [id: string]: Session }, session) => {
+      const sessionEntities = action.payload;
+      const entities = sessionEntities.reduce(
+        (redEntities: { [id: string]: Session }, session) => {
           return {
-            ...entities,
+            ...redEntities,
             [session._links.self.href]: session
           };
         },

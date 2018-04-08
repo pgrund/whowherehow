@@ -1,21 +1,21 @@
 // app/shared/shared.module.ts
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { HttpClientModule, HttpClient } from "@angular/common/http";
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import {
   Routes,
   RouterModule,
   Params,
   RouterStateSnapshot
-} from "@angular/router";
+} from '@angular/router';
 
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { TruncateModule } from "ng2-truncate";
+import { TruncateModule } from 'ng2-truncate';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -23,7 +23,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 // @angular/flex-layout
-import { FlexLayoutModule } from "@angular/flex-layout";
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // @angular/material
 import {
@@ -44,10 +44,10 @@ import {
   MatTabsModule,
   MatGridListModule,
   MatToolbarModule
-} from "@angular/material";
+} from '@angular/material';
 
-import * as fromComponents from "./components";
-import * as fromContainers from "./containers";
+import * as fromComponents from './components';
+import * as fromContainers from './containers';
 
 export const modules = [];
 

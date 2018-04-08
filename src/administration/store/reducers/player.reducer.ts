@@ -1,6 +1,6 @@
-import * as PlayerActions from "../actions/player.actions";
+import * as PlayerActions from '../actions/player.actions';
 
-import { Player } from "@app/models/player";
+import { Player } from '@shared/models/player';
 
 export interface PlayerState {
   entities: { [id: string]: Player };
@@ -18,7 +18,6 @@ export function reducer(
   state = initialState,
   action: PlayerActions.PlayerActions
 ): PlayerState {
-  console.debug("PLAYER", action);
   switch (action.type) {
     case PlayerActions.LOAD_PLAYERS: {
       return {
