@@ -1,22 +1,24 @@
 <div class="flex-container" fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="center" class="card-container">
-        <div fxFlex="90%" fxFlex.md="50%" fxFlex.lg="40%">
-            <mat-card>
-                <mat-card-title>Sign In</mat-card-title>
-                <mat-card-content>
-                    <form (ngSubmit)="login.emit(form.value)" [formGroup]="form" novalidate>
-                        <div fxLayout="column">
-                            <mat-input-container fxFlex="100%">
-                                <input matInput required placeholder="User Name" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="name" [class.invalid]="form.controls.name.errors && form.controls.name.dirty">
-                            </mat-input-container>
-                            <mat-input-container fxFlex="100%">
-                                <input matInput required type="password" placeholder="Server Password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="password" [class.invalid]="form.controls.password.errors && form.controls.password.dirty">
-                            </mat-input-container>
-                            <button fxFlex="80%" mat-raised-button color="accent" [disabled]="form.invalid" type="submit">Sign In</button>
-                        </div>
-                    </form>
-                </mat-card-content>
-            </mat-card>
-        </div>
+  <div fxLayout="row" fxLayoutAlign="center" class="card-container">
+    <div fxFlex="90%" fxFlex.md="50%" fxFlex.lg="40%">
+      <mat-card>
+        <mat-card-title>Sign In</mat-card-title>
+        <mat-card-content>
+          <form (ngSubmit)="login.emit(form.value)" [formGroup]="form" novalidate>
+            <div fxLayout="column">
+              <mat-form-field>
+                <input matInput required placeholder="User Name" autocorrect="off" autocapitalize="off" spellcheck="off" formControlName="name"
+                  [class.invalid]="form.controls['name'].errors && form.controls['name'].dirty">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput required type="password" placeholder="Server Password" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  spellcheck="off" formControlName="password" [class.invalid]="form.controls['password'].errors && form.controls['password'].dirty">
+              </mat-form-field>
+              <button fxFlex="80%" mat-raised-button color="accent" [disabled]="form.invalid" type="submit">Sign In</button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
     </div>
+  </div>
 </div>

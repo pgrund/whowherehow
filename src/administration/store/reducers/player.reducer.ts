@@ -1,7 +1,6 @@
 import * as PlayerActions from '../actions/player.actions';
 
 import { Player } from '@shared/models/player';
-
 export interface PlayerState {
   entities: { [id: string]: Player };
   loaded: boolean;
@@ -30,9 +29,9 @@ export function reducer(
     case PlayerActions.LOAD_PLAYERS_SUCCESS: {
       const players = action.payload;
       const entities = players.reduce(
-        (entities: { [id: string]: Player }, player) => {
+        (myEntities: { [id: string]: Player }, player) => {
           return {
-            ...entities,
+            ...myEntities,
             [player._links.self.href]: player
           };
         },

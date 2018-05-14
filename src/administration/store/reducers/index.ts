@@ -1,3 +1,4 @@
+import { getPlayersLoaded } from './../selectors/player.selector';
 import {
   ActionReducerMap,
   createFeatureSelector,
@@ -24,6 +25,10 @@ export const getAdministrationState = createFeatureSelector<
 export const getPlayerState = createSelector(
   getAdministrationState,
   (state: AdministrationState) => state.players
+);
+export const getPlayerLoaded = createSelector(
+  getPlayerState,
+  fromPlayer.getPlayerLoaded
 );
 
 export const getSessionState = createSelector(

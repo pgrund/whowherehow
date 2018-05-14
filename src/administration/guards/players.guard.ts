@@ -1,18 +1,17 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   CanActivate,
   CanActivateChild,
   ActivatedRouteSnapshot,
   RouterStateSnapshot
-} from "@angular/router";
+} from '@angular/router';
 
-import { Store } from "@ngrx/store";
-import { Observable } from "rxjs/Observable";
-import { of } from "rxjs/observable/of";
+import { Store } from '@ngrx/store';
+import { Observable, of } from 'rxjs';
 
-import { tap, filter, take, switchMap, catchError } from "rxjs/operators";
+import { tap, filter, take, switchMap, catchError } from 'rxjs/operators';
 
-import * as fromStore from "../store";
+import * as fromStore from '../store';
 
 @Injectable()
 export class PlayersGuard implements CanActivate, CanActivateChild {
@@ -28,14 +27,14 @@ export class PlayersGuard implements CanActivate, CanActivateChild {
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
-    console.log("players guard, canActivateChild ...");
+    console.log('players guard, canActivateChild ...');
     return this.canActivate();
   }
 
   checkStore(): Observable<boolean> {
     return this.store.select(fromStore.getPlayersLoaded).pipe(
       tap(loaded => {
-        console.log("players guard tapped loaded", loaded);
+        console.log('players guard tapped loaded', loaded);
         if (!loaded) {
           this.store.dispatch(new fromStore.LoadPlayersAction());
         }

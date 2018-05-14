@@ -5,18 +5,18 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Store, Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs';
+
+
+
+
+
 // import 'rxjs/add/operator/flatMap';
-import 'rxjs/add/operator/toArray';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/concat';
+
+
+
+
+
 
 import * as fromRoot from '@app/store';
 import * as fromActions from '../actions';

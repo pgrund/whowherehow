@@ -10,10 +10,9 @@ import { Store } from '@ngrx/store';
 
 import * as fromStore from '../../store';
 
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 
-import 'rxjs/add/operator/map';
+
 
 import { MySelfService } from '@app/services/my-self.service';
 import { Session } from '@shared/models/session';

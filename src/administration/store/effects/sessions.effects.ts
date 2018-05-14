@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from '@app/store';
 import * as fromAuth from '@auth/store';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { switchMap, map, catchError, withLatestFrom } from 'rxjs/operators';
 
 import * as fromActions from '../actions';

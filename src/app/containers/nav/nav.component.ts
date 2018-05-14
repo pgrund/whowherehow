@@ -6,7 +6,7 @@ import * as fromStore from '@auth/store';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { LogoutAction } from '@auth/store';
 

@@ -12,15 +12,9 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { TruncateModule } from 'ng2-truncate';
-
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
 
 // @angular/flex-layout
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -76,13 +70,7 @@ export const modules = [];
     MatGridListModule,
     ReactiveFormsModule,
     TruncateModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
+    TranslateModule,
     HttpClientModule,
     RouterModule
   ],

@@ -1,3 +1,5 @@
+import { getMyGame } from './../../../auth/store/reducers/index';
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -5,9 +7,6 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 
 import { Store } from '@ngrx/store';
 import { AuthState, getMyInfo } from '@auth/store';
@@ -28,7 +27,8 @@ export class OverviewComponent implements OnInit {
   nameFormGroup: FormGroup;
   emailFormGroup: FormGroup;
 
-  info$: Observable<Player>;
+  me$: Observable<Player>;
+  game$: Observable<Session>;
 
   steps = [
     { label: 'Confirm your name', content: 'Last name, First name.' },
@@ -46,7 +46,8 @@ export class OverviewComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private store: Store<AuthState>
   ) {
-    this.info$ = this.store.select(getMyInfo);
+    this.me$ = this.store.select(getMyInfo);
+    this.game$ = this.store.select(getMyGame);
   }
 
   getMyCards() {

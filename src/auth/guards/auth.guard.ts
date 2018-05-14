@@ -10,8 +10,7 @@ import {
 } from '@angular/router';
 
 // import rxjs
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of } from 'rxjs';
 
 import { tap, filter, take, switchMap, catchError } from 'rxjs/operators';
 

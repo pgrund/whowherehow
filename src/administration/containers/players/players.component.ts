@@ -6,7 +6,7 @@ import * as fromRoot from '@app/store';
 import * as fromAuth from '@auth/store';
 import * as fromStore from '../../store';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DataSource } from '@angular/cdk/collections';
 

@@ -3,7 +3,7 @@ import { MatSnackBar } from "@angular/material";
 
 import { Store } from "@ngrx/store";
 
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 
 import * as fromStore from "../../store";
 import * as fromAdmin from "@administration/store";

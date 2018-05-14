@@ -1,9 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable ,  Subscription ,  BehaviorSubject } from 'rxjs';
 
 import { DataSource } from '@angular/cdk/collections';
 
